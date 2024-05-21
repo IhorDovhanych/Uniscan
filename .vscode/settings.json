@@ -2,10 +2,14 @@
     "cSpell.language": "en,uk,en-GB,en-US",
     "cSpell.words": [
         "ARGB",
+        "dartz",
         "firestore",
+        "geolocator",
         "NAMU",
         "squircle",
-        "uniscan"
+        "uniscan",
+        "usecase",
+        "usecases"
     ],
     "a-file-icon-vscode.activeIconPacks": [
         "angular",
