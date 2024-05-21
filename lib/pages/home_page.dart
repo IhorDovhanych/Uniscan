@@ -1,8 +1,8 @@
-import 'package:Uniscan/widgets/custom_app_bar.dart';
-import 'package:Uniscan/widgets/qr_code_dialog.dart';
-import 'package:Uniscan/widgets/qr_code_list.dart';
+import 'package:uniscan/widgets/custom_app_bar.dart';
+import 'package:uniscan/widgets/qr_code_dialog.dart';
+import 'package:uniscan/widgets/qr_code_list.dart';
 import 'package:flutter/material.dart';
-import 'package:Uniscan/services/qr_code_service.dart';
+import 'package:uniscan/services/qr_code_service.dart';
 
 class HomePage extends StatefulWidget {
   final String? barcode;

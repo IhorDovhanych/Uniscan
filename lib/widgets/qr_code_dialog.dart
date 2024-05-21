@@ -1,5 +1,5 @@
-import 'package:Uniscan/models/qr_code.dart';
-import 'package:Uniscan/services/qr_code_service.dart';
+import 'package:uniscan/models/qr_code.dart';
+import 'package:uniscan/services/qr_code_service.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 

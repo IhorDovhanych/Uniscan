@@ -1,4 +1,4 @@
-import 'package:Uniscan/services/qr_code_service.dart';
+import 'package:uniscan/services/qr_code_service.dart';
 import 'package:figma_squircle/figma_squircle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';

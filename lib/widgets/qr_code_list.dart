@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:Uniscan/services/qr_code_service.dart';
-import 'package:Uniscan/widgets/qr_code_item.dart'; // Importing QrCodeItem
+import 'package:uniscan/services/qr_code_service.dart';
+import 'package:uniscan/widgets/qr_code_item.dart'; // Importing QrCodeItem
 
 class QrCodeList extends StatelessWidget {
   final Stream<QuerySnapshot> qrCodeStream;

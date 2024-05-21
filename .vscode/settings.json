@@ -6,5 +6,11 @@
         "NAMU",
         "squircle",
         "uniscan"
+    ],
+    "a-file-icon-vscode.activeIconPacks": [
+        "angular",
+        "ngrx",
+        "nest",
+        "rails"
     ]
 }

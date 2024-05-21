@@ -2,7 +2,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
-import 'package:Uniscan/pages/home_page.dart';
+import 'package:uniscan/pages/home_page.dart';
 
 class CameraPage extends StatefulWidget {
   const CameraPage({super.key, required this.pageController});

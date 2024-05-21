@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:Uniscan/models/qr_code.dart';
+import 'package:uniscan/models/qr_code.dart';
 
 class QrCodeService {
   // get collection
