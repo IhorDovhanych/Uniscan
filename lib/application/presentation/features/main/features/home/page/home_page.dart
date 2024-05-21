@@ -1,8 +1,8 @@
-import 'package:uniscan/widgets/custom_app_bar.dart';
-import 'package:uniscan/widgets/qr_code_dialog.dart';
-import 'package:uniscan/widgets/qr_code_list.dart';
 import 'package:flutter/material.dart';
-import 'package:uniscan/services/qr_code_service.dart';
+import 'package:uniscan/application/data/services/qr_code_service.dart';
+import 'package:uniscan/application/presentation/features/main/features/home/widgets/custom_app_bar.dart';
+import 'package:uniscan/application/presentation/features/main/features/home/widgets/qr_code_dialog.dart';
+import 'package:uniscan/application/presentation/features/main/features/home/widgets/qr_code_list.dart';
 
 class HomePage extends StatefulWidget {
   final String? barcode;
@@ -74,4 +74,3 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
-

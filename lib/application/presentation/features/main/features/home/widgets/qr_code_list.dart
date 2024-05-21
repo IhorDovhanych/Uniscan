@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:uniscan/services/qr_code_service.dart';
-import 'package:uniscan/widgets/qr_code_item.dart'; // Importing QrCodeItem
+import 'package:flutter/material.dart';
+import 'package:uniscan/application/data/services/qr_code_service.dart';
+import 'package:uniscan/application/presentation/features/main/features/home/widgets/qr_code_item.dart'; // Importing QrCodeItem
 
 class QrCodeList extends StatelessWidget {
   final Stream<QuerySnapshot> qrCodeStream;
@@ -29,8 +29,7 @@ class QrCodeList extends StatelessWidget {
                 if (index < qrCodesList.length) {
                   DocumentSnapshot document = qrCodesList[index];
                   String docID = document.id;
-                  Map<String, dynamic> data =
-                      document.data() as Map<String, dynamic>;
+                  Map<String, dynamic> data = document.data() as Map<String, dynamic>;
                   String name = data['name'];
                   String url = data['url'];
 
