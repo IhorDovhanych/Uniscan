@@ -1,6 +1,6 @@
-import 'package:uniscan/models/qr_code.dart';
-import 'package:uniscan/services/qr_code_service.dart';
 import 'package:flutter/material.dart';
+import 'package:uniscan/application/data/models/qr_code.dart';
+import 'package:uniscan/application/data/services/qr_code_service.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class QrCodeDialog extends StatelessWidget {
@@ -50,9 +50,7 @@ class QrCodeDialog extends StatelessWidget {
             ? ElevatedButton(
                 onPressed: () {
                   try {
-                    QrCode qrCode = QrCode(
-                        name: nameTextController.text,
-                        url: urlTextController.text);
+                    QrCode qrCode = QrCode(name: nameTextController.text, url: urlTextController.text);
                     if (docID == null) {
                       qrCodeService.addQrCode(qrCode);
                     } else {
@@ -75,8 +73,7 @@ class QrCodeDialog extends StatelessWidget {
                       )
                     : const Text(
                         'Update',
-                        style: TextStyle(
-                            color: Colors.black), // Customize color for update
+                        style: TextStyle(color: Colors.black), // Customize color for update
                       ),
               )
             : Row(
@@ -85,9 +82,7 @@ class QrCodeDialog extends StatelessWidget {
                   ElevatedButton(
                       onPressed: () {
                         try {
-                          QrCode qrCode = QrCode(
-                              name: nameTextController.text,
-                              url: urlTextController.text);
+                          QrCode qrCode = QrCode(name: nameTextController.text, url: urlTextController.text);
                           qrCodeService.addQrCode(qrCode);
                           Navigator.pop(context);
                         } catch (err) {
@@ -106,9 +101,7 @@ class QrCodeDialog extends StatelessWidget {
                   ElevatedButton(
                       onPressed: () {
                         try {
-                          QrCode qrCode = QrCode(
-                              name: nameTextController.text,
-                              url: urlTextController.text);
+                          QrCode qrCode = QrCode(name: nameTextController.text, url: urlTextController.text);
                           qrCodeService.addQrCode(qrCode);
                           launchUrl(Uri.parse(urlTextController.text));
                           Navigator.pop(context);
