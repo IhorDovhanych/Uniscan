@@ -87,10 +87,12 @@ class QrCodeItem extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               IconButton(
-                                onPressed: () => qrCodeService.deleteQrCode(docID),
+                                onPressed: () =>
+                                    qrCodeService.deleteQrCode(docID),
                                 icon: SvgPicture.asset(
                                   'assets/icons/delete.svg',
-                                  color: Colors.black,
+                                  colorFilter: ColorFilter.mode(
+                                      Colors.transparent, BlendMode.color),
                                   width: 30,
                                 ),
                               ),
@@ -98,7 +100,8 @@ class QrCodeItem extends StatelessWidget {
                                 onPressed: () => openQrCodeBox(docID: docID),
                                 icon: SvgPicture.asset(
                                   'assets/icons/edit.svg',
-                                  color: Colors.black,
+                                  colorFilter: ColorFilter.mode(
+                                      Colors.transparent, BlendMode.color),
                                   width: 30,
                                 ),
                               ),
