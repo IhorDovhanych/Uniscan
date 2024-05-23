@@ -27,7 +27,7 @@ class LoginPage extends StatelessWidget with AutoRouteWrapper {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Text(
-                    'Факти про котів',
+                    'Uniscan',
                     style: TextStyle(
                       fontSize: 30,
                       fontFamily: 'DancingScript',

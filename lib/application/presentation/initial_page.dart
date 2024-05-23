@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:uniscan/application/data/services/user_service.dart';
 import 'package:uniscan/application/domain/entities/user_entity.dart';
 import 'package:uniscan/application/presentation/router/router.gr.dart';
 import 'package:flutter/cupertino.dart';
