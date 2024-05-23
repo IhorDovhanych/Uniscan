@@ -11,44 +11,39 @@ abstract class UserService {
 }
 
 class UserServiceImpl extends UserService {
-  Stream<UserEntity?> get _currentUserStream =>
-      getIt<AuthRepository>().currentUserStream;
   CollectionReference users = FirebaseFirestore.instance.collection('users');
   UserModel? user;
 
-  UserServiceImpl() {
-    _initializeUser();
-  }
-
-  void _initializeUser() {
-    _currentUserStream.listen((u) {
-      if (u != null) {
-        user = UserModel(
-          id: u.id,
-          email: u.email,
-          name: u.name,
-          avatar: u.avatar,
-          qrCodes: [],
-        );
+  Future<void> createUser(Stream<UserEntity?> userStream) async {
+    UserEntity? u = await userStream.first;
+    if (u != null) {
+      user = UserModel(
+        id: u.id,
+        email: u.email,
+        name: u.name,
+        avatar: u.avatar,
+        qrCodes: [],
+      );
+      var querySnapshot = await users.where('id', isEqualTo: user?.id).get();
+      if (querySnapshot.docs.isEmpty) {
+        await users.add({
+          'id': user?.id,
+          'email': user?.email,
+          'name': user?.name,
+          'avatar': user?.avatar,
+          'qrCodes': user?.qrCodes,
+        });
       } else {
-        user = UserModel(
-          id: '',
-          email: '',
-          name: '',
-          avatar: '',
-          qrCodes: [],
-        );
+        print('User already exists');
       }
-    });
-  }
-
-  Future<void> createUser() {
-    return users.add({
-      'id': user?.id,
-      'email': user?.email,
-      'name': user?.name,
-      'avatar': user?.avatar,
-      'qrCodes': [],
-    });
+    } else {
+      user = UserModel(
+        id: '',
+        email: '',
+        name: '',
+        avatar: '',
+        qrCodes: [],
+      );
+    }
   }
 }
