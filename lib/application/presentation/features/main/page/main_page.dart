@@ -10,7 +10,7 @@ class MainPage extends StatelessWidget {
   }) : super(key: key);
 
   final int initialTabIndex;
-
+  
   @override
   Widget build(final BuildContext context) => Scaffold(
         body: HomePage(barcode: '')

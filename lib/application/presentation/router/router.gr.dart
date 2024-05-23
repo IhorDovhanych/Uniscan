@@ -11,31 +11,32 @@
 // ignore_for_file: type=lint
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'package:auto_route/auto_route.dart' as _i4;
-import 'package:flutter/material.dart' as _i5;
+import 'package:auto_route/auto_route.dart' as _i5;
+import 'package:auto_route/empty_router_widgets.dart' as _i2;
+import 'package:flutter/material.dart' as _i6;
 import 'package:uniscan/application/presentation/features/login/page/login_page.dart'
-    as _i2;
+    as _i4;
 import 'package:uniscan/application/presentation/features/main/page/main_page.dart'
     as _i3;
 import 'package:uniscan/application/presentation/initial_page.dart' as _i1;
 
-class AppRouter extends _i4.RootStackRouter {
-  AppRouter([_i5.GlobalKey<_i5.NavigatorState>? navigatorKey])
+class AppRouter extends _i5.RootStackRouter {
+  AppRouter([_i6.GlobalKey<_i6.NavigatorState>? navigatorKey])
       : super(navigatorKey);
 
   @override
-  final Map<String, _i4.PageFactory> pagesMap = {
+  final Map<String, _i5.PageFactory> pagesMap = {
     InitialRoute.name: (routeData) {
-      return _i4.AdaptivePage<dynamic>(
+      return _i5.AdaptivePage<dynamic>(
         routeData: routeData,
         child: const _i1.InitialPage(),
       );
     },
     UnAuthorizedRouter.name: (routeData) {
-      return _i4.CustomPage<dynamic>(
+      return _i5.CustomPage<dynamic>(
         routeData: routeData,
-        child: _i4.WrappedRoute(child: const _i2.LoginPage()),
-        transitionsBuilder: _i4.TransitionsBuilders.fadeIn,
+        child: const _i2.EmptyRouterPage(),
+        transitionsBuilder: _i5.TransitionsBuilders.fadeIn,
         opaque: true,
         barrierDismissible: false,
       );
@@ -43,22 +44,22 @@ class AppRouter extends _i4.RootStackRouter {
     MainRoute.name: (routeData) {
       final args =
           routeData.argsAs<MainRouteArgs>(orElse: () => const MainRouteArgs());
-      return _i4.CustomPage<dynamic>(
+      return _i5.CustomPage<dynamic>(
         routeData: routeData,
         child: _i3.MainPage(
           key: args.key,
           initialTabIndex: args.initialTabIndex,
         ),
-        transitionsBuilder: _i4.TransitionsBuilders.fadeIn,
+        transitionsBuilder: _i5.TransitionsBuilders.fadeIn,
         opaque: true,
         barrierDismissible: false,
       );
     },
     LoginRoute.name: (routeData) {
-      return _i4.CustomPage<dynamic>(
+      return _i5.CustomPage<dynamic>(
         routeData: routeData,
-        child: _i4.WrappedRoute(child: const _i2.LoginPage()),
-        transitionsBuilder: _i4.TransitionsBuilders.fadeIn,
+        child: _i5.WrappedRoute(child: const _i4.LoginPage()),
+        transitionsBuilder: _i5.TransitionsBuilders.fadeIn,
         opaque: true,
         barrierDismissible: false,
       );
@@ -66,29 +67,29 @@ class AppRouter extends _i4.RootStackRouter {
   };
 
   @override
-  List<_i4.RouteConfig> get routes => [
-        _i4.RouteConfig(
+  List<_i5.RouteConfig> get routes => [
+        _i5.RouteConfig(
           InitialRoute.name,
           path: '/',
           children: [
-            _i4.RouteConfig(
+            _i5.RouteConfig(
               '#redirect',
               path: '',
               parent: InitialRoute.name,
               redirectTo: 'login',
               fullMatch: true,
             ),
-            _i4.RouteConfig(
+            _i5.RouteConfig(
               UnAuthorizedRouter.name,
               path: 'login',
               parent: InitialRoute.name,
               children: [
-                _i4.RouteConfig(
+                _i5.RouteConfig(
                   LoginRoute.name,
                   path: '',
                   parent: UnAuthorizedRouter.name,
                 ),
-                _i4.RouteConfig(
+                _i5.RouteConfig(
                   '*#redirect',
                   path: '*',
                   parent: UnAuthorizedRouter.name,
@@ -97,14 +98,14 @@ class AppRouter extends _i4.RootStackRouter {
                 ),
               ],
             ),
-            _i4.RouteConfig(
+            _i5.RouteConfig(
               MainRoute.name,
               path: 'main_page',
               parent: InitialRoute.name,
             ),
           ],
         ),
-        _i4.RouteConfig(
+        _i5.RouteConfig(
           '*#redirect',
           path: '*',
           redirectTo: '/',
@@ -115,8 +116,8 @@ class AppRouter extends _i4.RootStackRouter {
 
 /// generated route for
 /// [_i1.InitialPage]
-class InitialRoute extends _i4.PageRouteInfo<void> {
-  const InitialRoute({List<_i4.PageRouteInfo>? children})
+class InitialRoute extends _i5.PageRouteInfo<void> {
+  const InitialRoute({List<_i5.PageRouteInfo>? children})
       : super(
           InitialRoute.name,
           path: '/',
@@ -127,9 +128,9 @@ class InitialRoute extends _i4.PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [_i2.LoginPage]
-class UnAuthorizedRouter extends _i4.PageRouteInfo<void> {
-  const UnAuthorizedRouter({List<_i4.PageRouteInfo>? children})
+/// [_i2.EmptyRouterPage]
+class UnAuthorizedRouter extends _i5.PageRouteInfo<void> {
+  const UnAuthorizedRouter({List<_i5.PageRouteInfo>? children})
       : super(
           UnAuthorizedRouter.name,
           path: 'login',
@@ -141,9 +142,9 @@ class UnAuthorizedRouter extends _i4.PageRouteInfo<void> {
 
 /// generated route for
 /// [_i3.MainPage]
-class MainRoute extends _i4.PageRouteInfo<MainRouteArgs> {
+class MainRoute extends _i5.PageRouteInfo<MainRouteArgs> {
   MainRoute({
-    _i5.Key? key,
+    _i6.Key? key,
     int initialTabIndex = 0,
   }) : super(
           MainRoute.name,
@@ -163,7 +164,7 @@ class MainRouteArgs {
     this.initialTabIndex = 0,
   });
 
-  final _i5.Key? key;
+  final _i6.Key? key;
 
   final int initialTabIndex;
 
@@ -174,8 +175,8 @@ class MainRouteArgs {
 }
 
 /// generated route for
-/// [_i2.LoginPage]
-class LoginRoute extends _i4.PageRouteInfo<void> {
+/// [_i4.LoginPage]
+class LoginRoute extends _i5.PageRouteInfo<void> {
   const LoginRoute()
       : super(
           LoginRoute.name,

@@ -12,8 +12,8 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await _provideBlocAndRunApp();
-  runApp(MyApp());
 }
+
 Future<void> _provideBlocAndRunApp() async {
   await pushScopeAsync(appScope);
   runApp(
@@ -28,27 +28,17 @@ class MyApp extends StatelessWidget {
   MyApp({super.key});
 
   //final PageController _pageController = PageController();
-   
+
   final _appRouter = AppRouter();
-  
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(fontFamily: 'NAMU'),
-        routerDelegate: _appRouter.delegate(),
-        routeInformationParser: _appRouter.defaultRouteParser(),
-        builder: (final context, final child) => child!,
-        // home: PageView(
-        //   physics: const BouncingScrollPhysics(),
-        //   controller: _pageController,
-        //   children: List.unmodifiable([
-        //     const HomePage(
-        //       barcode: '',
-        //     ),
-        //     CameraPage(pageController: _pageController)
-        //   ]),
-        // )
-        );
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(fontFamily: 'NAMU'),
+      routerDelegate: _appRouter.delegate(),
+      routeInformationParser: _appRouter.defaultRouteParser(),
+      builder: (final context, final child) => child!
+    );
   }
 }

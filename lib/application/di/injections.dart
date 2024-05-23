@@ -9,6 +9,8 @@ import 'package:uniscan/application/domain/usecase/log_in_with_google_use_case.d
 import 'package:uniscan/application/domain/usecase/log_out_use_case.dart';
 import 'package:uniscan/application/presentation/cubit/auth_cubit.dart';
 import 'package:uniscan/application/presentation/features/login/cubit/login_cubit.dart';
+import 'package:uniscan/application/presentation/widgets/buttons/logout/cubit/logout_cubit.dart';
+import 'package:uniscan/application/presentation/widgets/buttons/logout/widget/logout.dart';
 import 'package:uniscan/firebase_options.dart';
 
 final getIt = GetIt.instance;
@@ -46,6 +48,7 @@ void _initAppScope(final GetIt getIt) {
         getIt<LogOutUseCase>(),
       ));
   getIt.registerLazySingleton<LoginCubit>(() => LoginCubit(getIt<LogInWithGoogleUseCase>()));
+  getIt.registerLazySingleton<LogoutCubit>(() => LogoutCubit(getIt<LogOutUseCase>()));
   //endregion
 }
 
