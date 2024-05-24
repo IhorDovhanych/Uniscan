@@ -5,34 +5,31 @@ import 'package:uniscan/application/di/injections.dart';
 import 'package:uniscan/application/domain/entities/user_entity.dart';
 import 'package:uniscan/application/domain/repository/auth_repository.dart';
 
-class QrCodeService {
-  // get collection
-  final CollectionReference qrCodes =
-      FirebaseFirestore.instance.collection('qr_codes');
+abstract class QrCodeService {
+  CollectionReference get qrCodes;
+  Future<void> addQrCode(QrCode qrCode);
+  Stream<QuerySnapshot> getQrCodesStream();
+  Future<QrCode>? getQrCodeById(String docID);
+  Future<void> updateQrCode(String docID, QrCode newQrCode);
+  Future<void> deleteQrCode(String docID);
+}
 
-  //* CREATE
+class QrCodeServiceImpl extends QrCodeService {
+  final UserService _userService;
+  final CollectionReference qrCodes;
+
+  QrCodeServiceImpl(this._userService, this.qrCodes);
+
   Future<void> addQrCode(QrCode qrCode) async {
-    DocumentReference docRef = await qrCodes.add({
-      'name': qrCode.name,
-      'url': qrCode.url,
-      'createdAt': qrCode.createdAt,
-      'updatedAt': qrCode.updatedAt,
-    });
-    String docID = docRef.id;
-    getIt<UserService>()
-        .addQrCodeToUser(getIt<AuthRepository>().currentUserStream, docID);
+    DocumentReference docRef = await qrCodes.add(toMap(qrCode));
+    _userService.addQrCodeToUser(docRef.id);
   }
-
-//* READ/GET
-  Stream<QuerySnapshot> getAllQrCodesStream() {
-    final qrCodesStream =
-        qrCodes.orderBy('updatedAt', descending: true).snapshots();
-    return qrCodesStream;
-  }
+  //* CREATE
 
   Stream<QuerySnapshot> getQrCodesStream() async* {
     UserEntity? u = await getIt<AuthRepository>().currentUserStream.first;
-    CollectionReference users = getIt<UserService>().users;
+    CollectionReference users =
+        await getIt<FirebaseFirestore>().collection('users');
     if (u != null) {
       var userQuerySnapshot = await users.where('id', isEqualTo: u.id).get();
       if (userQuerySnapshot.docs.isNotEmpty) {
@@ -57,28 +54,39 @@ class QrCodeService {
       yield* Stream<QuerySnapshot>.empty();
     }
   }
+//* READ/GET
 
-  Future<Map<String, dynamic>>? getQrCodeById(String docID) async {
+  Future<QrCode>? getQrCodeById(String docID) async {
     try {
-      DocumentSnapshot doc = await qrCodes.doc(docID).get();
-      return doc.data() as Map<String, dynamic>;
+      final DocumentSnapshot doc = await qrCodes.doc(docID).get();
+      Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+      return QrCode(name: data['name'], url: data['url']);
     } catch (e) {
       throw Exception("Error getting document: $e");
     }
   }
-//* UPDATE
+//* READ/GET
 
   Future<void> updateQrCode(String docID, QrCode newQrCode) {
-    return qrCodes.doc(docID).update({
-      'name': newQrCode.name,
-      'url': newQrCode.url,
-      'updatedAt': DateTime.now()
-    });
+    return qrCodes.doc(docID).update(toMap(newQrCode, updated: true));
+  }
+//* UPDATE
+
+  Future<void> deleteQrCode(String docID) {
+    _userService.deleteQrCodeFromUser(docID);
+    return qrCodes.doc(docID).delete();
   }
 //* DELETE
 
-  Future<void> deleteQrCode(String docID) {
-    getIt<UserService>().deleteQrCodeFromUser(getIt<AuthRepository>().currentUserStream, docID);
-    return qrCodes.doc(docID).delete();
+  Map<String, dynamic> toMap(QrCode qrCode, {bool updated = false}) {
+    return {
+      'name': qrCode.name,
+      'url': qrCode.url,
+      if (updated)
+        'updatedAt': DateTime.now()
+      else
+        'updatedAt': qrCode.updatedAt,
+      'createdAt': qrCode.createdAt,
+    };
   }
 }

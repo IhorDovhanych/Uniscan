@@ -15,7 +15,7 @@ class UserModel {
         email: json['email'],
         name: json['name'],
         avatar: json['avatar'],
-        qrCodes: json['qrCodes']
+        qrCodes: json['qrCodes'] ?? []
       );
 
   final String id;

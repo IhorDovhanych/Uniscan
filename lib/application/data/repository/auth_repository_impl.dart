@@ -10,12 +10,12 @@ import 'package:uniscan/core/error/error_codes.dart';
 import 'package:uniscan/core/utils/print_utils.dart';
 
 class AuthRepositoryImpl extends AuthRepository {
-  AuthRepositoryImpl(this._usersService);
+  AuthRepositoryImpl(this._authService);
 
-  final AuthService _usersService;
+  final AuthService _authService;
 
   @override
-  Stream<UserEntity?> get currentUserStream => _usersService.user
+  Stream<UserEntity?> get currentUserStream => _authService.user
       .map((final user) => user == null
           ? null
           : UserEntity(
@@ -25,7 +25,7 @@ class AuthRepositoryImpl extends AuthRepository {
   @override
   Future<Either<BaseException, void>> logInWithGoogle() async {
     try {
-      await _usersService.logInWithGoogle();
+      await _authService.logInWithGoogle();
       getIt<UserService>().createUser();
       return const Right(null);
     } catch (e, st) {
@@ -40,7 +40,7 @@ class AuthRepositoryImpl extends AuthRepository {
   @override
   Future<Either<BaseException, void>> logOut() async {
     try {
-      await _usersService.logOut();
+      await _authService.logOut();
       return const Right(null);
     } catch (e, st) {
       const message = 'Failed to log out';

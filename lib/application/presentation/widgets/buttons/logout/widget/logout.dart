@@ -5,6 +5,7 @@ import 'package:uniscan/application/di/injections.dart';
 import 'package:uniscan/application/domain/usecase/log_out_use_case.dart';
 import 'package:uniscan/application/presentation/widgets/buttons/logout/cubit/logout_cubit.dart';
 import 'package:uniscan/application/presentation/widgets/buttons/scale_tap.dart';
+import 'package:uniscan/generated/l10n.dart';
 
 class LogoutButton extends StatelessWidget {
 
@@ -24,11 +25,11 @@ class LogoutButton extends StatelessWidget {
                     ),
                     padding: const EdgeInsets.all(16),
                     child: Row(
-                      children: const [
+                      children: [
                         Icon(FontAwesomeIcons.google, color: Colors.white),
                         SizedBox(width: 16),
                         Text(
-                          'Вийти з акаунту',
+                          S.of(context).log_out,
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 16,

@@ -6,19 +6,20 @@ import 'package:uniscan/application/domain/repository/auth_repository.dart';
 
 abstract class UserService {
   Future<void> createUser();
-  Future<void> addQrCodeToUser(Stream<UserEntity?> userStream, String docID);
+  Future<void> addQrCodeToUser(String docID);
   Future<void> getUsersQrCodes();
-  Future<void> deleteQrCodeFromUser(Stream<UserEntity?> userStream, String docID);
-  CollectionReference get users;
+  Future<void> deleteQrCodeFromUser(String docID);
 }
 
 class UserServiceImpl extends UserService {
-  CollectionReference users = FirebaseFirestore.instance.collection('users');
   UserModel? user;
-  Stream<UserEntity?> userStream = getIt<AuthRepository>().currentUserStream;
+  final CollectionReference _users;
+  final Stream<UserEntity?> _userStream;
+
+  UserServiceImpl(this._users, this._userStream);
 
   Future<void> createUser() async {
-    UserEntity? u = await userStream.first;
+    UserEntity? u = await _userStream.first;
     if (u != null) {
       user = UserModel(
         id: u.id,
@@ -27,9 +28,9 @@ class UserServiceImpl extends UserService {
         avatar: u.avatar,
         qrCodes: [],
       );
-      var querySnapshot = await users.where('id', isEqualTo: user?.id).get();
+      var querySnapshot = await _users.where('id', isEqualTo: user?.id).get();
       if (querySnapshot.docs.isEmpty) {
-        await users.add({
+        await _users.add({
           'id': user?.id,
           'email': user?.email,
           'name': user?.name,
@@ -44,8 +45,8 @@ class UserServiceImpl extends UserService {
     }
   }
 
-  Future<void> addQrCodeToUser(Stream<UserEntity?> userStream, String docID) async {
-    UserEntity? u = await userStream.first;
+  Future<void> addQrCodeToUser(String docID) async {
+    UserEntity? u = await _userStream.first;
     if (u != null) {
       user = UserModel(
         id: u.id,
@@ -54,7 +55,7 @@ class UserServiceImpl extends UserService {
         avatar: u.avatar,
         qrCodes: [],
       );
-      var querySnapshot = await users.where('id', isEqualTo: user?.id).get();
+      var querySnapshot = await _users.where('id', isEqualTo: user?.id).get();
       if (querySnapshot.docs.isNotEmpty) {
         var documentSnapshot = querySnapshot.docs.first;
         await documentSnapshot.reference.update({
@@ -70,9 +71,9 @@ class UserServiceImpl extends UserService {
   }
 
   Future<List<String>> getUsersQrCodes() async {
-    UserEntity? u = await userStream.first;
+    UserEntity? u = await _userStream.first;
     if (u != null) {
-      var querySnapshot = await users.where('id', isEqualTo: u.id).get();
+      var querySnapshot = await _users.where('id', isEqualTo: u.id).get();
       if (querySnapshot.docs.isNotEmpty) {
         var documentSnapshot = querySnapshot.docs.first;
         List<String> qrCodes = List<String>.from(documentSnapshot['qrCodes']);
@@ -86,10 +87,11 @@ class UserServiceImpl extends UserService {
       return [];
     }
   }
-  Future<void> deleteQrCodeFromUser(Stream<UserEntity?> userStream, String docID) async {
-    UserEntity? u = await userStream.first;
+
+  Future<void> deleteQrCodeFromUser(String docID) async {
+    UserEntity? u = await _userStream.first;
     if (u != null) {
-      var querySnapshot = await users.where('id', isEqualTo: u.id).get();
+      var querySnapshot = await _users.where('id', isEqualTo: u.id).get();
       if (querySnapshot.docs.isNotEmpty) {
         var documentSnapshot = querySnapshot.docs.first;
         List<String> qrCodes = List<String>.from(documentSnapshot['qrCodes']);

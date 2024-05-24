@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uniscan/application/presentation/widgets/buttons/scale_tap.dart';
 import 'package:uniscan/application/presentation/widgets/loading/loading_view_widget.dart';
+import 'package:uniscan/generated/l10n.dart';
 
 class LoginPage extends StatelessWidget with AutoRouteWrapper {
   const LoginPage({final Key? key}) : super(key: key);
@@ -59,11 +60,11 @@ class _GoogleLoginButton extends StatelessWidget {
           ),
           padding: const EdgeInsets.all(16),
           child: Row(
-            children: const [
+            children: [
               Icon(FontAwesomeIcons.google, color: Colors.white),
               SizedBox(width: 16),
               Text(
-                'Увійти за допопмогою Google',
+                S.of(context).log_in_with_google,
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 16,

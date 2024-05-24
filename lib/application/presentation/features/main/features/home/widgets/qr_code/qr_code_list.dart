@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:uniscan/application/data/services/qr_code_service.dart';
-import 'package:uniscan/application/presentation/features/main/features/home/widgets/qr_code_item.dart';
+import 'package:uniscan/application/presentation/features/main/features/home/widgets/qr_code/qr_code_item.dart';
 import 'package:uniscan/application/presentation/widgets/buttons/logout/widget/logout.dart'; // Importing QrCodeItem
 
 class QrCodeList extends StatelessWidget {
@@ -36,6 +36,7 @@ class QrCodeList extends StatelessWidget {
                       document.data() as Map<String, dynamic>;
                   String name = data['name'];
                   String url = data['url'];
+                  //qrCodeService.getQrCodeById(docID);
 
                   return QrCodeItem(
                     docID: docID,

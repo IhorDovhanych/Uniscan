@@ -1,0 +1,11 @@
+{
+    "@@locale": "en",
+    "log_in_with_google": "Log in with Google",
+    "@log_in_with_google": {
+        "description": "Title for sign in with google button"
+    },
+    "log_out": "Log out",
+    "@log_out": {
+        "description": "Title for log out button"
+    }
+}

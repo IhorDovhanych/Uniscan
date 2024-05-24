@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:uniscan/application/data/models/qr_code.dart';
 import 'package:uniscan/application/data/services/qr_code_service.dart';
+import 'package:uniscan/application/di/injections.dart';
 import 'package:uniscan/application/presentation/features/main/features/home/widgets/custom_app_bar.dart';
-import 'package:uniscan/application/presentation/features/main/features/home/widgets/qr_code_dialog.dart';
-import 'package:uniscan/application/presentation/features/main/features/home/widgets/qr_code_list.dart';
+import 'package:uniscan/application/presentation/features/main/features/home/widgets/qr_code/qr_code_dialog.dart';
+import 'package:uniscan/application/presentation/features/main/features/home/widgets/qr_code/qr_code_list.dart';
 
 class HomePage extends StatefulWidget {
   final String? barcode;
@@ -14,7 +16,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final QrCodeService qrCodeService = QrCodeService();
+  final QrCodeService qrCodeService = getIt<QrCodeService>();
   final TextEditingController nameTextController = TextEditingController();
   final TextEditingController urlTextController = TextEditingController();
 
@@ -37,9 +39,11 @@ class _HomePageState extends State<HomePage> {
         urlTextController.text = widget.barcode!;
       }
     } else {
-      dynamic qrCode = await qrCodeService.getQrCodeById(docID);
-      nameTextController.text = qrCode['name'];
-      urlTextController.text = qrCode['url'];
+      QrCode? qrCode = await qrCodeService.getQrCodeById(docID);
+      if (qrCode != null) {
+        nameTextController.text = qrCode.name;
+        urlTextController.text = qrCode.url;
+      }
     }
     showDialog(
       context: context,
@@ -69,7 +73,8 @@ class _HomePageState extends State<HomePage> {
       body: QrCodeList(
         qrCodeStream: qrCodeService.getQrCodesStream(),
         qrCodeService: qrCodeService,
-        openQrCodeBox: openQrCodeBox, // Pass the function without named parameters
+        openQrCodeBox:
+            openQrCodeBox, // Pass the function without named parameters
       ),
     );
   }
