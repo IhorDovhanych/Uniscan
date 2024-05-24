@@ -11,7 +11,6 @@ import 'package:uniscan/application/domain/usecase/log_out_use_case.dart';
 import 'package:uniscan/application/presentation/cubit/auth_cubit.dart';
 import 'package:uniscan/application/presentation/features/login/cubit/login_cubit.dart';
 import 'package:uniscan/application/presentation/widgets/buttons/logout/cubit/logout_cubit.dart';
-import 'package:uniscan/application/presentation/widgets/buttons/logout/widget/logout.dart';
 import 'package:uniscan/firebase_options.dart';
 
 final getIt = GetIt.instance;

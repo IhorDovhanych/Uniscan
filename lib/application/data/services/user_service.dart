@@ -5,7 +5,8 @@ import 'package:uniscan/application/domain/entities/user_entity.dart';
 abstract class UserService {
   Future<void> createUser(Stream<UserEntity?> userStream);
   Future<void> addQrCodeToUser(Stream<UserEntity?> userStream, String docID);
-  // Future<QrCode> getUsersQrCodes();
+  Future<void> getUsersQrCodes(Stream<UserEntity?> userStream);
+  CollectionReference get users;
 }
 
 class UserServiceImpl extends UserService {
@@ -61,6 +62,24 @@ class UserServiceImpl extends UserService {
       }
     } else {
       print('Empty user data');
+    }
+  }
+
+  Future<List<String>> getUsersQrCodes(Stream<UserEntity?> userStream) async {
+    UserEntity? u = await userStream.first;
+    if (u != null) {
+      var querySnapshot = await users.where('id', isEqualTo: u.id).get();
+      if (querySnapshot.docs.isNotEmpty) {
+        var documentSnapshot = querySnapshot.docs.first;
+        List<String> qrCodes = List<String>.from(documentSnapshot['qrCodes']);
+        return qrCodes;
+      } else {
+        print('User document not found');
+        return [];
+      }
+    } else {
+      print('Empty user data');
+      return [];
     }
   }
 }
