@@ -26,7 +26,7 @@ class AuthRepositoryImpl extends AuthRepository {
   Future<Either<BaseException, void>> logInWithGoogle() async {
     try {
       await _usersService.logInWithGoogle();
-      getIt<UserService>().createUser(currentUserStream);
+      getIt<UserService>().createUser();
       return const Right(null);
     } catch (e, st) {
       const message = 'Failed to log in with google';

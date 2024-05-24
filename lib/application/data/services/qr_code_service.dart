@@ -78,6 +78,7 @@ class QrCodeService {
 //* DELETE
 
   Future<void> deleteQrCode(String docID) {
+    getIt<UserService>().deleteQrCodeFromUser(getIt<AuthRepository>().currentUserStream, docID);
     return qrCodes.doc(docID).delete();
   }
 }
