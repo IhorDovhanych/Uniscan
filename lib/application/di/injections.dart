@@ -3,6 +3,7 @@ import 'package:get_it/get_it.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:uniscan/application/data/repository/auth_repository_impl.dart';
 import 'package:uniscan/application/data/services/auth_service.dart';
+import 'package:uniscan/application/data/services/user_service.dart';
 import 'package:uniscan/application/domain/repository/auth_repository.dart';
 import 'package:uniscan/application/domain/usecase/get_user_stream_use_case.dart';
 import 'package:uniscan/application/domain/usecase/log_in_with_google_use_case.dart';
@@ -30,6 +31,7 @@ void _initAppScope(final GetIt getIt) {
         getIt<FirebaseAuth>(),
         getIt<GoogleSignIn>(),
       ));
+  getIt.registerLazySingleton<UserService>(() => UserServiceImpl());
   //endregion
 
   //region Repositories

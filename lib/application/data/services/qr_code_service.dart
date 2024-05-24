@@ -1,18 +1,23 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:uniscan/application/data/models/qr_code.dart';
+import 'package:uniscan/application/data/services/user_service.dart';
+import 'package:uniscan/application/di/injections.dart';
+import 'package:uniscan/application/domain/repository/auth_repository.dart';
 
 class QrCodeService {
   // get collection
   final CollectionReference qrCodes = FirebaseFirestore.instance.collection('qr_codes');
 
   //* CREATE
-  Future<void> addQrCode(QrCode qrCode) {
-    return qrCodes.add({
+  Future<void> addQrCode(QrCode qrCode) async{
+    DocumentReference docRef = await qrCodes.add({
       'name': qrCode.name,
       'url': qrCode.url,
       'createdAt': qrCode.createdAt,
       'updatedAt': qrCode.updatedAt,
     });
+    String docID = docRef.id;
+    getIt<UserService>().addQrCodeToUser(getIt<AuthRepository>().currentUserStream, docID);
   }
 
 //* READ/GET

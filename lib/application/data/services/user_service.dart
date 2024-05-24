@@ -1,12 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:uniscan/application/data/models/user.dart';
-import 'package:uniscan/application/di/injections.dart';
 import 'package:uniscan/application/domain/entities/user_entity.dart';
-import 'package:uniscan/application/domain/repository/auth_repository.dart';
 
 abstract class UserService {
-  // Future<void> createUser();
-  // Future<void> addQrCodeToUser();
+  Future<void> createUser(Stream<UserEntity?> userStream);
+  Future<void> addQrCodeToUser(Stream<UserEntity?> userStream, String docID);
   // Future<QrCode> getUsersQrCodes();
 }
 
@@ -37,13 +35,32 @@ class UserServiceImpl extends UserService {
         print('User already exists');
       }
     } else {
+      print('Empty user data');
+    }
+  }
+
+  Future<void> addQrCodeToUser(Stream<UserEntity?> userStream, String docID) async {
+    UserEntity? u = await userStream.first;
+    if (u != null) {
       user = UserModel(
-        id: '',
-        email: '',
-        name: '',
-        avatar: '',
+        id: u.id,
+        email: u.email,
+        name: u.name,
+        avatar: u.avatar,
         qrCodes: [],
       );
+      var querySnapshot = await users.where('id', isEqualTo: user?.id).get();
+      if (querySnapshot.docs.isNotEmpty) {
+        var documentSnapshot = querySnapshot.docs.first;
+        await documentSnapshot.reference.update({
+          'qrCodes': FieldValue.arrayUnion([docID]),
+        });
+        print('QR code added successfully');
+      } else {
+        print('User document not found');
+      }
+    } else {
+      print('Empty user data');
     }
   }
 }

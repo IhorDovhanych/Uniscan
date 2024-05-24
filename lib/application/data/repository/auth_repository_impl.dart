@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:uniscan/application/data/services/auth_service.dart';
 import 'package:uniscan/application/data/services/user_service.dart';
+import 'package:uniscan/application/di/injections.dart';
 import 'package:uniscan/application/domain/entities/user_entity.dart';
 import 'package:uniscan/application/domain/repository/auth_repository.dart';
 import 'package:uniscan/core/error/base_exception.dart';
@@ -25,7 +26,7 @@ class AuthRepositoryImpl extends AuthRepository {
   Future<Either<BaseException, void>> logInWithGoogle() async {
     try {
       await _usersService.logInWithGoogle();
-      await UserServiceImpl().createUser(currentUserStream);
+      getIt<UserService>().createUser(currentUserStream);
       return const Right(null);
     } catch (e, st) {
       const message = 'Failed to log in with google';
