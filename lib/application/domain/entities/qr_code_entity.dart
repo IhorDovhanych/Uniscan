@@ -4,7 +4,7 @@ import 'package:geolocator/geolocator.dart';
 class QrCodeEntity extends Equatable {
   final String name;
   final String url;
-  //final String category;
+  //final Category category;
   final Position position;
   final DateTime createdAt;
   final DateTime updatedAt;
