@@ -36,8 +36,6 @@ class QrCodeList extends StatelessWidget {
                       document.data() as Map<String, dynamic>;
                   String name = data['name'];
                   String url = data['url'];
-                  //qrCodeService.getQrCodeById(docID);
-
                   return QrCodeItem(
                     docID: docID,
                     name: name,
@@ -57,34 +55,30 @@ class QrCodeList extends StatelessWidget {
         } else {
           return Center(
               child: Container(
-            color: Colors.transparent,
-            padding: EdgeInsets.all(50),
-            child: Flex(
-              direction: Axis.vertical,
-              children: [
-                Container(
-                    width: 200,
-                    height: 200,
-                    child: SvgPicture.asset(
-                      'assets/svg/fake_qr.svg',
-                      colorFilter:
-                          ColorFilter.mode(Colors.black26, BlendMode.srcIn),
-                    )),
-                SizedBox(height: 20),
-                Container(
-                  width: 200,
-                  child: Text(
-                    'No scanned QR codes yet',
-                    style: TextStyle(
-                        fontSize: 20,
-                        color: Colors.black26,
-                        fontWeight: FontWeight.bold),
-                  ),
-                ),
-                LogoutButton()
-              ],
-            ),
-          ));
+                  color: Colors.transparent,
+                  padding: EdgeInsets.all(50),
+                  child: Flex(direction: Axis.vertical, children: [
+                    Container(
+                        width: 200,
+                        height: 200,
+                        child: SvgPicture.asset(
+                          'assets/svg/fake_qr.svg',
+                          colorFilter:
+                              ColorFilter.mode(Colors.black26, BlendMode.srcIn),
+                        )),
+                    SizedBox(height: 20),
+                    Container(
+                      width: 200,
+                      child: Text(
+                        'No scanned QR codes yet',
+                        style: TextStyle(
+                            fontSize: 20,
+                            color: Colors.black26,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    LogoutButton()
+                  ])));
         }
       },
     );

@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:uniscan/application/di/injections.dart';
 import 'package:uniscan/application/presentation/features/login/cubit/login_cubit.dart';
@@ -27,13 +28,7 @@ class LoginPage extends StatelessWidget with AutoRouteWrapper {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text(
-                    'Uniscan',
-                    style: TextStyle(
-                      fontSize: 30,
-                      fontFamily: 'DancingScript',
-                    ),
-                  ),
+                  SvgPicture.asset('assets/svg/logo_full.svg'),
                   const SizedBox(height: 10.0),
                   Padding(
                     padding: const EdgeInsets.all(16),
