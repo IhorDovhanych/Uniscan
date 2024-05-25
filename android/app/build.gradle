@@ -15,6 +15,13 @@ if (localPropertiesFile.exists()) {
     }
 }
 
+def debugKeystoreProperties = new Properties()
+def debugKeystorePropertiesFile = rootProject.file('debug-key.properties')
+if (debugKeystorePropertiesFile.exists()) {
+    println "Loading Debug KeyStore Props from ${debugKeystorePropertiesFile}"
+    debugKeystoreProperties.load(new FileInputStream(debugKeystorePropertiesFile))
+}
+
 def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
 if (flutterVersionCode == null) {
     flutterVersionCode = '1'
@@ -54,7 +61,17 @@ android {
         versionName flutterVersionName
         multiDexEnabled true
     }
+    signingConfigs {
+        debug {
+            keyAlias debugKeystoreProperties['keyAlias']
+            keyPassword debugKeystoreProperties['keyPassword']
+            storeFile file(debugKeystoreProperties['storeFile'])
+            storePassword debugKeystoreProperties['storePassword']
+        }
+        release {
 
+        }
+    }
     buildTypes {
         release {
             // TODO: Add your own signing config for the release build.
@@ -71,3 +88,4 @@ flutter {
 dependencies {
     implementation 'com.android.support:multidex:1.0.3'
 }
+
