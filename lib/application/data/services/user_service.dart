@@ -54,6 +54,7 @@ class UserServiceImpl extends UserService {
     }
   }
 
+  @override
   Future<void> createUser(final UserModel user) async {
     final doc = await _users.doc(user.id).get();
     if (!doc.exists) {
@@ -63,6 +64,7 @@ class UserServiceImpl extends UserService {
     }
   }
 
+  @override
   Future<void> addQrCodeToUser(String docID) async {
     // final querySnapshot = await _users.where('id', isEqualTo: user.id).get();
     // if (querySnapshot.docs.isNotEmpty) {
@@ -76,6 +78,7 @@ class UserServiceImpl extends UserService {
     // }
   }
 
+  @override
   Future<List<String>> getUsersQrCodes() async {
     return [];
     // UserEntity? u = await _userStream.first;
@@ -95,6 +98,7 @@ class UserServiceImpl extends UserService {
     // }
   }
 
+  @override
   Future<void> deleteQrCodeFromUser(String docID) async {
     // UserEntity? u = await _userStream.first;
     // if (u != null) {
