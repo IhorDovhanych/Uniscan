@@ -13,6 +13,7 @@ import 'package:uniscan/application/domain/usecase/log_out_use_case.dart';
 import 'package:uniscan/application/presentation/cubit/auth_cubit.dart';
 import 'package:uniscan/application/presentation/features/login/cubit/login_cubit.dart';
 import 'package:uniscan/application/presentation/widgets/buttons/logout/cubit/logout_cubit.dart';
+import 'package:uniscan/core/firebase/firebase_keys.dart';
 import 'package:uniscan/firebase_options.dart';
 
 final getIt = GetIt.instance;
@@ -21,37 +22,43 @@ const appScope = 'appScope';
 
 void _initAppScope(final GetIt getIt) {
   //region services
-  getIt.registerLazySingleton<FirebaseAuth>(() => FirebaseAuth.instance);
+  getIt.registerLazySingleton<FirebaseAuth>(
+    () => FirebaseAuth.instance,
+  );
   getIt.registerLazySingleton<FirebaseFirestore>(
-      () => FirebaseFirestore.instance);
+    () => FirebaseFirestore.instance,
+  );
   getIt.registerLazySingleton<GoogleSignIn>(() => GoogleSignIn(
-      clientId: DefaultFirebaseOptions.currentPlatform.iosClientId));
+        clientId: DefaultFirebaseOptions.currentPlatform.iosClientId,
+      ));
   //endregion
 
   // region Services
   getIt.registerLazySingleton<AuthService>(() => AuthServiceImpl(
         getIt<FirebaseAuth>(),
         getIt<GoogleSignIn>(),
+        getIt<UserService>(),
       ));
   getIt.registerLazySingleton<UserService>(() => UserServiceImpl(
-      getIt<FirebaseFirestore>().collection('users'),
-      getIt<AuthRepository>().currentUserStream));
+        getIt<FirebaseFirestore>().collection(FirestoreKeys.collection_name_users),
+        getIt<FirebaseAuth>(),
+      ));
   getIt.registerLazySingleton<QrCodeService>(() => QrCodeServiceImpl(
-      getIt<UserService>(), getIt<FirebaseFirestore>().collection('qr_codes')));
+        getIt<UserService>(),
+        getIt<FirebaseFirestore>().collection(FirestoreKeys.collection_qr_codes),
+      ));
   //endregion
 
   //region Repositories
-  getIt.registerLazySingleton<AuthRepository>(
-      () => AuthRepositoryImpl(getIt<AuthService>()));
+  getIt.registerLazySingleton<AuthRepository>(() => AuthRepositoryImpl(
+        getIt<AuthService>(),
+      ));
   //endregion
 
   //region Use cases
-  getIt.registerFactory<GetUserStreamUseCase>(
-      () => GetUserStreamUseCase(getIt<AuthRepository>()));
-  getIt.registerFactory<LogInWithGoogleUseCase>(
-      () => LogInWithGoogleUseCase(getIt<AuthRepository>()));
-  getIt.registerFactory<LogOutUseCase>(
-      () => LogOutUseCase(getIt<AuthRepository>()));
+  getIt.registerFactory<GetUserStreamUseCase>(() => GetUserStreamUseCase(getIt<AuthRepository>()));
+  getIt.registerFactory<LogInWithGoogleUseCase>(() => LogInWithGoogleUseCase(getIt<AuthRepository>()));
+  getIt.registerFactory<LogOutUseCase>(() => LogOutUseCase(getIt<AuthRepository>()));
   //endregion
 
   //region Cubits
@@ -59,10 +66,8 @@ void _initAppScope(final GetIt getIt) {
         getIt<GetUserStreamUseCase>(),
         getIt<LogOutUseCase>(),
       ));
-  getIt.registerLazySingleton<LoginCubit>(
-      () => LoginCubit(getIt<LogInWithGoogleUseCase>()));
-  getIt.registerLazySingleton<LogoutCubit>(
-      () => LogoutCubit(getIt<LogOutUseCase>()));
+  getIt.registerLazySingleton<LoginCubit>(() => LoginCubit(getIt<LogInWithGoogleUseCase>()));
+  getIt.registerLazySingleton<LogoutCubit>(() => LogoutCubit(getIt<LogOutUseCase>()));
   //endregion
 }
 

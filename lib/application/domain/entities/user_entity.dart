@@ -6,12 +6,14 @@ class UserEntity extends Equatable {
     required this.name,
     required this.email,
     required this.avatar,
+    required this.qrCodes,
   });
 
   final String id;
   final String name;
   final String email;
   final String avatar;
+  final List<String> qrCodes;
 
   @override
   List<Object?> get props => [
@@ -19,5 +21,6 @@ class UserEntity extends Equatable {
         name,
         email,
         avatar,
+        qrCodes,
       ];
 }
