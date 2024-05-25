@@ -1,6 +1,4 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uniscan/application/presentation/features/main/features/camera/page/camera_page.dart';
 import 'package:uniscan/application/presentation/features/main/features/home/page/home_page.dart';
 

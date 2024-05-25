@@ -40,7 +40,7 @@ class AuthServiceImpl extends AuthService {
     );
     await _firebaseAuth.signInWithCredential(credential);
     if (_firebaseAuth.currentUser != null) {
-      _userService.createUser(_firebaseAuth.currentUser!.toModel());
+      await _userService.createUser(_firebaseAuth.currentUser!.toModel);
     }
   }
 

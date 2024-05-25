@@ -2,9 +2,10 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:get_it/get_it.dart';
 import 'package:uniscan/application/data/models/user.dart';
 
-abstract class UserService {
+abstract class UserService extends Disposable {
   Stream<UserModel?> get currentUserStream;
   Future<UserModel?> get currentUser;
   Future<void> createUser(final UserModel user);
@@ -17,13 +18,41 @@ class UserServiceImpl extends UserService {
   UserServiceImpl(
     this._users,
     this._firebaseAuth,
-  );
+  ) {
+    _subscribeToFirebaseUserChanges();
+  }
 
   final CollectionReference _users;
   final FirebaseAuth _firebaseAuth;
+  final _userStreamController = StreamController<UserModel?>.broadcast();
+  late StreamSubscription<User?> _subscriptionStream;
 
   @override
-  Stream<UserModel?> get currentUserStream => _users.doc('123').snapshots().map((event) => null);
+  Stream<UserModel?> get currentUserStream async* {
+    final user = await currentUser;
+    yield user;
+    yield* _userStreamController.stream;
+  }
+
+  void _subscribeToFirebaseUserChanges() {
+    _subscriptionStream = _firebaseAuth.authStateChanges().listen((final firebaseUser) async {
+      final user = await _getUserFromFirestore(firebaseUser?.uid);
+      _userStreamController.add(user);
+    });
+  }
+
+  @override
+  Future<UserModel?> get currentUser => _getUserFromFirestore(_firebaseAuth.currentUser?.uid);
+
+  Future<UserModel?> _getUserFromFirestore(final String? id) async {
+    final doc = await _users.doc(id).get();
+    if (doc.exists) {
+      final snapData = doc.data() as Map<String, dynamic>;
+      return UserModel.fromJson(snapData);
+    } else {
+      return null;
+    }
+  }
 
   Future<void> createUser(final UserModel user) async {
     final doc = await _users.doc(user.id).get();
@@ -31,18 +60,6 @@ class UserServiceImpl extends UserService {
       await _users.doc(user.id).set(user.toJson());
     } else {
       print('User already exists');
-    }
-  }
-
-  @override
-  Future<UserModel?> get currentUser async {
-    final id = _firebaseAuth.currentUser?.uid;
-    final doc = await _users.doc(id).get();
-    if (doc.exists) {
-      final snapData = doc.data() as Map<String, dynamic>;
-      return UserModel.fromJson(snapData);
-    } else {
-      return null;
     }
   }
 
@@ -96,5 +113,11 @@ class UserServiceImpl extends UserService {
     // } else {
     //   print('Empty user data');
     // }
+  }
+
+  @override
+  FutureOr onDispose() {
+    _subscriptionStream.cancel();
+    _userStreamController.close();
   }
 }

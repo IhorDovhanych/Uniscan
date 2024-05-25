@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:uniscan/application/data/services/qr_code_service.dart';
 import 'package:uniscan/application/presentation/features/main/features/home/widgets/qr_code/qr_code_item.dart';
@@ -32,8 +31,7 @@ class QrCodeList extends StatelessWidget {
                 if (index < qrCodesList.length) {
                   DocumentSnapshot document = qrCodesList[index];
                   String docID = document.id;
-                  Map<String, dynamic> data =
-                      document.data() as Map<String, dynamic>;
+                  Map<String, dynamic> data = document.data() as Map<String, dynamic>;
                   String name = data['name'];
                   String url = data['url'];
                   return QrCodeItem(
@@ -63,18 +61,14 @@ class QrCodeList extends StatelessWidget {
                         height: 200,
                         child: SvgPicture.asset(
                           'assets/svg/fake_qr.svg',
-                          colorFilter:
-                              ColorFilter.mode(Colors.black26, BlendMode.srcIn),
+                          colorFilter: ColorFilter.mode(Colors.black26, BlendMode.srcIn),
                         )),
                     SizedBox(height: 20),
                     Container(
                       width: 200,
                       child: Text(
                         'No scanned QR codes yet',
-                        style: TextStyle(
-                            fontSize: 20,
-                            color: Colors.black26,
-                            fontWeight: FontWeight.bold),
+                        style: TextStyle(fontSize: 20, color: Colors.black26, fontWeight: FontWeight.bold),
                       ),
                     ),
                     LogoutButton()

@@ -52,6 +52,7 @@ void _initAppScope(final GetIt getIt) {
   //region Repositories
   getIt.registerLazySingleton<AuthRepository>(() => AuthRepositoryImpl(
         getIt<AuthService>(),
+        getIt<UserService>(),
       ));
   //endregion
 

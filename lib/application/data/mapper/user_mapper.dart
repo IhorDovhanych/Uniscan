@@ -3,7 +3,7 @@ import 'package:uniscan/application/data/models/user.dart';
 import 'package:uniscan/application/domain/entities/user_entity.dart';
 
 extension UserEntityX on UserEntity {
-  UserModel toModel() => UserModel(
+  UserModel get toModel => UserModel(
         id: id,
         email: email,
         name: name,
@@ -13,7 +13,7 @@ extension UserEntityX on UserEntity {
 }
 
 extension UserModelX on UserModel {
-  UserEntity toEntity() => UserEntity(
+  UserEntity get toEntity => UserEntity(
         id: id,
         email: email,
         name: name,
@@ -23,7 +23,7 @@ extension UserModelX on UserModel {
 }
 
 extension UserX on User {
-  UserModel toModel() => UserModel(
+  UserModel get toModel => UserModel(
         id: uid,
         name: displayName ?? '',
         email: email ?? '',
