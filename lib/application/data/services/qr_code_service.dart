@@ -7,25 +7,28 @@ import 'package:uniscan/application/domain/repository/auth_repository.dart';
 
 abstract class QrCodeService {
   CollectionReference get qrCodes;
-  Future<void> addQrCode(QrCode qrCode);
+  Future<void> addQrCode(final QrCode qrCode);
   Stream<QuerySnapshot> getQrCodesStream();
-  Future<QrCode>? getQrCodeById(String docID);
-  Future<void> updateQrCode(String docID, QrCode newQrCode);
-  Future<void> deleteQrCode(String docID);
+  Future<QrCode>? getQrCodeById(final String docID);
+  Future<void> updateQrCode(final String docID, final QrCode newQrCode);
+  Future<void> deleteQrCode(final String docID);
 }
 
 class QrCodeServiceImpl extends QrCodeService {
   final UserService _userService;
+  @override
   final CollectionReference qrCodes;
 
   QrCodeServiceImpl(this._userService, this.qrCodes);
 
-  Future<void> addQrCode(QrCode qrCode) async {
+  @override
+  Future<void> addQrCode(final QrCode qrCode) async {
     DocumentReference docRef = await qrCodes.add(toMap(qrCode));
     _userService.addQrCodeToUser(docRef.id);
   }
   //* CREATE
 
+  @override
   Stream<QuerySnapshot> getQrCodesStream() async* {
     UserEntity? u = await getIt<AuthRepository>().currentUserStream.first;
     CollectionReference users =
@@ -56,7 +59,8 @@ class QrCodeServiceImpl extends QrCodeService {
   }
 //* READ/GET
 
-  Future<QrCode>? getQrCodeById(String docID) async {
+  @override
+  Future<QrCode>? getQrCodeById(final String docID) async {
     try {
       final DocumentSnapshot doc = await qrCodes.doc(docID).get();
       Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
@@ -67,19 +71,19 @@ class QrCodeServiceImpl extends QrCodeService {
   }
 //* READ/GET
 
-  Future<void> updateQrCode(String docID, QrCode newQrCode) {
-    return qrCodes.doc(docID).update(toMap(newQrCode, updated: true));
-  }
+  @override
+  Future<void> updateQrCode(final String docID, final QrCode newQrCode)
+    => qrCodes.doc(docID).update(toMap(newQrCode, updated: true));
 //* UPDATE
 
-  Future<void> deleteQrCode(String docID) {
+  @override
+  Future<void> deleteQrCode(final String docID) {
     _userService.deleteQrCodeFromUser(docID);
     return qrCodes.doc(docID).delete();
   }
 //* DELETE
 
-  Map<String, dynamic> toMap(QrCode qrCode, {bool updated = false}) {
-    return {
+  Map<String, dynamic> toMap(final QrCode qrCode, {final bool updated = false}) => {
       'name': qrCode.name,
       'url': qrCode.url,
       if (updated)
@@ -88,5 +92,4 @@ class QrCodeServiceImpl extends QrCodeService {
         'updatedAt': qrCode.updatedAt,
       'createdAt': qrCode.createdAt,
     };
-  }
 }

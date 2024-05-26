@@ -59,6 +59,7 @@ class UserServiceImpl extends UserService {
     final doc = await _users.doc(user.id).get();
     if (!doc.exists) {
       await _users.doc(user.id).set(user.toJson());
+      _userStreamController.add(user);
     } else {
       print('User already exists');
     }
