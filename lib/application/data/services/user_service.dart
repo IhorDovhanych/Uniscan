@@ -66,16 +66,19 @@ class UserServiceImpl extends UserService {
 
   @override
   Future<void> addQrCodeToUser(String docID) async {
-    // final querySnapshot = await _users.where('id', isEqualTo: user.id).get();
-    // if (querySnapshot.docs.isNotEmpty) {
-    //   var documentSnapshot = querySnapshot.docs.first;
-    //   await documentSnapshot.reference.update({
-    //     'qrCodes': FieldValue.arrayUnion([docID]),
-    //   });
-    //   print('QR code added successfully');
-    // } else {
-    //   print('User document not found');
-    // }
+    final user = await currentUser;
+    if (user == null) {
+      return;
+    }
+    final doc = await _users.doc(user.id).get();
+    if (doc.exists) {
+      await doc.reference.update({
+        'qrCodes': FieldValue.arrayUnion([docID]),
+      });
+      print('QR code added successfully');
+    } else {
+      print('User document not found');
+    }
   }
 
   @override

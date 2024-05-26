@@ -29,6 +29,7 @@ class AuthServiceImpl extends AuthService {
 
   @override
   Future<void> logInWithGoogle() async {
+    await logOut();
     final googleUser = await _googleSignIn.signIn();
     if (googleUser == null) {
       return Future.error('CANCELLED_SIGN_IN');
