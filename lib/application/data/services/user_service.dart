@@ -49,8 +49,6 @@ class UserServiceImpl extends UserService {
         _userStreamController.add(UserModel.fromJson(data));
       }
     });
-
-    _users.where(FieldPath.documentId, whereIn: )
   }
 
   @override
