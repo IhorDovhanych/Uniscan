@@ -67,8 +67,8 @@ void _initAppScope(final GetIt getIt) {
         getIt<GetUserStreamUseCase>(),
         getIt<LogOutUseCase>(),
       ));
-  getIt.registerLazySingleton<LoginCubit>(() => LoginCubit(getIt<LogInWithGoogleUseCase>()));
-  getIt.registerLazySingleton<LogoutCubit>(() => LogoutCubit(getIt<LogOutUseCase>()));
+  getIt.registerFactory<LoginCubit>(() => LoginCubit(getIt<LogInWithGoogleUseCase>()));
+  getIt.registerFactory<LogoutCubit>(() => LogoutCubit(getIt<LogOutUseCase>()));
   //endregion
 }
 
