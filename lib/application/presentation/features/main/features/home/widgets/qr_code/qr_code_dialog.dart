@@ -56,7 +56,7 @@ class QrCodeDialog extends StatelessWidget {
                         ? ElevatedButton(
                             onPressed: () {
                               try {
-                                QrCode qrCode = QrCode(
+                                QrCodeModel qrCode = QrCodeModel(
                                     name: nameTextController.text,
                                     url: urlTextController.text);
                                 if (docID == null) {
@@ -94,7 +94,7 @@ class QrCodeDialog extends StatelessWidget {
                               ElevatedButton(
                                   onPressed: () {
                                     try {
-                                      QrCode qrCode = QrCode(
+                                      QrCodeModel qrCode = QrCodeModel(
                                           name: nameTextController.text,
                                           url: urlTextController.text);
                                       context
@@ -117,7 +117,7 @@ class QrCodeDialog extends StatelessWidget {
                               ElevatedButton(
                                   onPressed: () {
                                     try {
-                                      QrCode qrCode = QrCode(
+                                      QrCodeModel qrCode = QrCodeModel(
                                           name: nameTextController.text,
                                           url: urlTextController.text);
                                       qrCodeService.addQrCode(qrCode);
