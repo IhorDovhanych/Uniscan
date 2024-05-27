@@ -39,7 +39,7 @@ class _HomePageState extends State<HomePage> {
         urlTextController.text = widget.barcode!;
       }
     } else {
-      QrCode? qrCode = await qrCodeService.getQrCodeById(docID);
+      QrCodeModel? qrCode = await qrCodeService.getQrCodeById(docID);
       if (qrCode != null) {
         nameTextController.text = qrCode.name;
         urlTextController.text = qrCode.url;

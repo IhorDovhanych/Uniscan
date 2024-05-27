@@ -7,10 +7,10 @@ import 'package:uniscan/application/domain/repository/auth_repository.dart';
 
 abstract class QrCodeService {
   CollectionReference get qrCodes;
-  Future<void> addQrCode(final QrCode qrCode);
+  Future<void> addQrCode(final QrCodeModel qrCode);
   Stream<QuerySnapshot> getQrCodesStream();
-  Future<QrCode>? getQrCodeById(final String docID);
-  Future<void> updateQrCode(final String docID, final QrCode newQrCode);
+  Future<QrCodeModel>? getQrCodeById(final String docID);
+  Future<void> updateQrCode(final String docID, final QrCodeModel newQrCode);
   Future<void> deleteQrCode(final String docID);
 }
 
@@ -22,7 +22,7 @@ class QrCodeServiceImpl extends QrCodeService {
   QrCodeServiceImpl(this._userService, this.qrCodes);
 
   @override
-  Future<void> addQrCode(final QrCode qrCode) async {
+  Future<void> addQrCode(final QrCodeModel qrCode) async {
     DocumentReference docRef = await qrCodes.add(toMap(qrCode));
     _userService.addQrCodeToUser(docRef.id);
   }
@@ -60,11 +60,11 @@ class QrCodeServiceImpl extends QrCodeService {
 //* READ/GET
 
   @override
-  Future<QrCode>? getQrCodeById(final String docID) async {
+  Future<QrCodeModel>? getQrCodeById(final String docID) async {
     try {
       final DocumentSnapshot doc = await qrCodes.doc(docID).get();
       Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-      return QrCode(name: data['name'], url: data['url']);
+      return QrCodeModel(name: data['name'], url: data['url']);
     } catch (e) {
       throw Exception("Error getting document: $e");
     }
@@ -72,7 +72,7 @@ class QrCodeServiceImpl extends QrCodeService {
 //* READ/GET
 
   @override
-  Future<void> updateQrCode(final String docID, final QrCode newQrCode)
+  Future<void> updateQrCode(final String docID, final QrCodeModel newQrCode)
     => qrCodes.doc(docID).update(toMap(newQrCode, updated: true));
 //* UPDATE
 
@@ -83,7 +83,7 @@ class QrCodeServiceImpl extends QrCodeService {
   }
 //* DELETE
 
-  Map<String, dynamic> toMap(final QrCode qrCode, {final bool updated = false}) => {
+  Map<String, dynamic> toMap(final QrCodeModel qrCode, {final bool updated = false}) => {
       'name': qrCode.name,
       'url': qrCode.url,
       if (updated)
