@@ -1,12 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:uniscan/application/data/models/qr_code.dart';
 import 'package:uniscan/application/data/services/qr_code_service.dart';
 import 'package:uniscan/application/presentation/features/main/features/home/widgets/qr_code/qr_code_item.dart';
 import 'package:uniscan/application/presentation/widgets/buttons/logout/widget/logout.dart'; // Importing QrCodeItem
 
 class QrCodeList extends StatelessWidget {
-  final Stream<QuerySnapshot> qrCodeStream;
+  final Stream<List<QrCodeModel>> qrCodeStream;
   final QrCodeService qrCodeService;
   final void Function({String? docID}) openQrCodeBox; // Update this line
 
@@ -19,25 +20,21 @@ class QrCodeList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<QuerySnapshot>(
+    return StreamBuilder<List<QrCodeModel>>(
       stream: qrCodeStream,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          List<DocumentSnapshot> qrCodesList = snapshot.data!.docs;
+          final qrCodesList = snapshot.data ?? [];
           return Scrollbar(
             child: ListView.builder(
               itemCount: qrCodesList.length + 1, // Add 1 for SizedBox
               itemBuilder: (context, index) {
                 if (index < qrCodesList.length) {
-                  DocumentSnapshot document = qrCodesList[index];
-                  String docID = document.id;
-                  Map<String, dynamic> data = document.data() as Map<String, dynamic>;
-                  String name = data['name'];
-                  String url = data['url'];
+                  final qrCode = qrCodesList[index];
                   return QrCodeItem(
-                    docID: docID,
-                    name: name,
-                    url: url,
+                    docID: qrCode.id,
+                    name: qrCode.name,
+                    url: qrCode.url,
                     qrCodeService: qrCodeService,
                     openQrCodeBox: openQrCodeBox,
                   );

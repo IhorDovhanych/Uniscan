@@ -1,19 +1,24 @@
+import 'dart:ffi';
 import 'package:flutter/foundation.dart';
 
 @immutable
 class QrCodeModel {
   QrCodeModel({
+    this.id = '',
     required this.name,
-    required this.url
+    required this.url,
+    this.position
   });
 
   factory QrCodeModel.fromJson(final Map<String, dynamic> json) => QrCodeModel(
+        id: json['id'],
         name: json['name'],
-        url: json['url']
+        url: json['url'],
       );
-
+  final String id;
   final String name;
   final String url;
+  final List<Double>? position;
   final DateTime createdAt = DateTime.now();
   final DateTime updatedAt = DateTime.now();
 

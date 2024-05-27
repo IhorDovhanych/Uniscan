@@ -7,5 +7,6 @@
     "log_out": "Log out",
     "@log_out": {
         "description": "Title for log out button"
-    }
+    },
+    "foo": "foo"
 }

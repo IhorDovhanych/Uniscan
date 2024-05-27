@@ -9,9 +9,9 @@ abstract class UserService extends Disposable {
   Stream<UserModel?> get currentUserStream;
   Future<UserModel?> get currentUser;
   Future<void> createUser(final UserModel user);
-  Future<void> addQrCodeToUser(String docID);
-  Future<void> getUsersQrCodes();
-  Future<void> deleteQrCodeFromUser(String docID);
+  Future<void> addQrCodeToUser(final String docID);
+  // Future<void> getUsersQrCodes();
+  Future<void> deleteQrCodeFromUser(final String docID);
 }
 
 class UserServiceImpl extends UserService {
@@ -22,7 +22,7 @@ class UserServiceImpl extends UserService {
     _subscribeToFirebaseUserChanges();
   }
 
-  final CollectionReference _users;
+  final CollectionReference<Map<String, dynamic>> _users;
   final FirebaseAuth _firebaseAuth;
   final _userStreamController = StreamController<UserModel?>.broadcast();
   late StreamSubscription<User?> _subscriptionStream;
@@ -66,7 +66,7 @@ class UserServiceImpl extends UserService {
   }
 
   @override
-  Future<void> addQrCodeToUser(String docID) async {
+  Future<void> addQrCodeToUser(final String docID) async {
     final user = await currentUser;
     if (user == null) {
       return;
@@ -82,9 +82,9 @@ class UserServiceImpl extends UserService {
     }
   }
 
-  @override
-  Future<List<String>> getUsersQrCodes() async {
-    return [];
+  // @override
+  // Future<List<String>> getUsersQrCodes() async {
+  //   return [];
     // UserEntity? u = await _userStream.first;
     // if (u != null) {
     //   var querySnapshot = await _users.where('id', isEqualTo: u.id).get();
@@ -100,27 +100,27 @@ class UserServiceImpl extends UserService {
     //   print('Empty user data');
     //   return [];
     // }
-  }
+// }
 
   @override
-  Future<void> deleteQrCodeFromUser(String docID) async {
-    // UserEntity? u = await _userStream.first;
-    // if (u != null) {
-    //   var querySnapshot = await _users.where('id', isEqualTo: u.id).get();
-    //   if (querySnapshot.docs.isNotEmpty) {
-    //     var documentSnapshot = querySnapshot.docs.first;
-    //     List<String> qrCodes = List<String>.from(documentSnapshot['qrCodes']);
-    //     qrCodes.remove(docID); // Remove the specified docID from qrCodes array
-    //     await documentSnapshot.reference.update({
-    //       'qrCodes': qrCodes,
-    //     });
-    //     print('QR code deleted successfully');
-    //   } else {
-    //     print('User document not found');
-    //   }
-    // } else {
-    //   print('Empty user data');
-    // }
+  Future<void> deleteQrCodeFromUser(final String docID) async {
+    final user = await currentUser;
+    if (user != null) {
+      final querySnapshot = await _users.where('id', isEqualTo: user.id).get();
+      if (querySnapshot.docs.isNotEmpty) {
+        final documentSnapshot = querySnapshot.docs.first;
+        final List<String> qrCodes = List<String>.from(documentSnapshot['qrCodes']);
+        qrCodes.remove(docID);
+        await documentSnapshot.reference.update({
+          'qrCodes': qrCodes,
+        });
+        print('QR code deleted successfully');
+      } else {
+        print('User document not found');
+      }
+    } else {
+      print('Empty user data');
+    }
   }
 
   @override

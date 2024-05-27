@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:uniscan/application/di/injections.dart';
 import 'package:uniscan/application/domain/usecase/log_out_use_case.dart';
+import 'package:uniscan/application/presentation/cubit/auth_cubit.dart';
 import 'package:uniscan/application/presentation/widgets/buttons/logout/cubit/logout_cubit.dart';
 import 'package:uniscan/application/presentation/widgets/buttons/scale_tap.dart';
 import 'package:uniscan/generated/l10n.dart';
@@ -16,7 +17,7 @@ class LogoutButton extends StatelessWidget {
         child: BlocBuilder<LogoutCubit, LogoutState>(
             builder: (final context, final state) => ScaleTap(
                   onPressed: () {
-                    context.read<LogoutCubit>().logOut();
+                    context.read<AuthCubit>().logOut();
                   },
                   child: Container(
                     decoration: BoxDecoration(
