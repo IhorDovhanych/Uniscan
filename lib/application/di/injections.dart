@@ -4,6 +4,7 @@ import 'package:get_it/get_it.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:uniscan/application/data/repository/auth_repository_impl.dart';
 import 'package:uniscan/application/data/services/auth_service.dart';
+import 'package:uniscan/application/data/services/camera_service.dart';
 import 'package:uniscan/application/data/services/geo_location_service.dart';
 import 'package:uniscan/application/data/services/qr_code_service.dart';
 import 'package:uniscan/application/data/services/user_service.dart';
@@ -49,6 +50,7 @@ void _initAppScope(final GetIt getIt) {
         getIt<FirebaseFirestore>().collection(FirestoreKeys.collection_qr_codes),
       ));
   getIt.registerLazySingleton<GeoLocationService>(() => GeoLocationServiceImpl());
+  getIt.registerLazySingleton<CameraService>(() => CameraServiceImpl());
   //endregion
 
   //region Repositories

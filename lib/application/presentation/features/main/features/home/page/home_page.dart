@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:uniscan/application/data/models/qr_code.dart';
+import 'package:uniscan/application/data/services/camera_service.dart';
 import 'package:uniscan/application/data/services/geo_location_service.dart';
 import 'package:uniscan/application/data/services/qr_code_service.dart';
 import 'package:uniscan/application/di/injections.dart';
@@ -24,12 +26,21 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    getIt<GeoLocationService>().getPermissions();
+
+    _initializePermissions();
+
     if (widget.barcode != '') {
       WidgetsBinding.instance.addPostFrameCallback((final _) {
         openQrCodeBox();
       });
     }
+  }
+
+  Future<void> _initializePermissions() async {
+    // Ask for geo location permissions
+    await getIt<GeoLocationService>().getPermissions();
+    // Ask for camera permissions
+    await getIt<CameraService>().getPermissions();
   }
 
   Future<void> openQrCodeBox({final String? docID}) async {
