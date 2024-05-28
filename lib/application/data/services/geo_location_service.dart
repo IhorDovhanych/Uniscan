@@ -21,8 +21,10 @@ class GeoLocationServiceImpl implements GeoLocationService {
   }
 
   @override
-  Future<Position> determinePosition() async =>
-      await Geolocator.getCurrentPosition();
+  Future<Position> determinePosition() async {
+    await getPermissions();
+    return await Geolocator.getCurrentPosition();
+  }
 
   @override
   Future<void> ensureLocationServiceEnabled() async {
@@ -49,8 +51,7 @@ class GeoLocationServiceImpl implements GeoLocationService {
 
   @override
   Future<Stream<Position>> getPositionStream() async {
-    await ensureLocationServiceEnabled();
-    await ensurePermissionsGranted();
+    await getPermissions();
 
     late LocationSettings locationSettings;
 

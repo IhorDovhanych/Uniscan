@@ -5,7 +5,6 @@ class QrCodeState extends Equatable{
   final String? docID;
   final QrCodeModel? qrCode;
 
-  
   @override
   List<Object?> get props => [docID, qrCode];
   QrCodeState copyWith({

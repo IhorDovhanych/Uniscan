@@ -1,10 +1,10 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:uniscan/application/di/injections.dart';
 import 'package:uniscan/application/presentation/features/login/cubit/login_cubit.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uniscan/application/presentation/widgets/buttons/scale_tap.dart';
 import 'package:uniscan/application/presentation/widgets/loading/loading_view_widget.dart';
 import 'package:uniscan/generated/l10n.dart';

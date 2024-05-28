@@ -14,24 +14,22 @@ class CameraPage extends StatefulWidget {
 
 class _CameraPageState extends State<CameraPage> {
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+  Widget build(final BuildContext context) => Scaffold(
       body: MobileScanner(
           controller: MobileScannerController(
               detectionSpeed: DetectionSpeed.noDuplicates, returnImage: true),
-          onDetect: (capture) {
+          onDetect: (final capture) {
             final List<Barcode> barcodes = capture.barcodes;
             final Uint8List? image = capture.image;
             if (image != null) {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) =>
+                  builder: (final context) =>
                       HomePage(barcode: barcodes.first.rawValue),
                 ),
               );
             }
           }),
     );
-  }
 }

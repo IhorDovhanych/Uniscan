@@ -9,25 +9,25 @@ import 'package:uniscan/application/presentation/features/main/features/home/wid
 import 'package:url_launcher/url_launcher.dart';
 
 class QrCodeItem extends StatelessWidget {
-  final String docID;
-  final String name;
-  final String url;
-  final QrCodeService qrCodeService;
-  final Function({String? docID}) openQrCodeBox;
 
   const QrCodeItem({
-    Key? key,
+    final Key? key,
     required this.docID,
     required this.name,
     required this.url,
     required this.qrCodeService,
     required this.openQrCodeBox,
   }) : super(key: key);
+  
+  final String docID;
+  final String name;
+  final String url;
+  final QrCodeService qrCodeService;
+  final Function({String? docID}) openQrCodeBox;
 
   @override
-  Widget build(BuildContext context) {
-    return BlocProvider(
-        create: (context) => QrCodeCubit(getIt<QrCodeService>()),
+  Widget build(final BuildContext context) => BlocProvider(
+        create: (final context) => QrCodeCubit(getIt<QrCodeService>()),
         child: BlocBuilder<QrCodeCubit, QrCodeState>(
             builder: (final context, final state) => SingleChildScrollView(
                   child: Column(
@@ -147,5 +147,4 @@ class QrCodeItem extends StatelessWidget {
                     ],
                   ),
                 )));
-  }
 }

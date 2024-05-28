@@ -9,15 +9,12 @@ class QrCodeCubit extends CubitBase<QrCodeState> {
   QrCodeCubit(this._qrCodeService) : super(const QrCodeState());
   final QrCodeService _qrCodeService;
 
-  Future<void> addQrCode(QrCodeModel qrCode) {
-    return _qrCodeService.addQrCode(qrCode);
-  }
+  Future<void> addQrCode(final QrCodeModel qrCode) =>
+      _qrCodeService.addQrCode(qrCode);
 
-  Future<void> updateQrCode(String docID, QrCodeModel qrCode) {
-    return _qrCodeService.updateQrCode(docID, qrCode);
-  }
+  Future<void> updateQrCode(final String docID, final QrCodeModel qrCode) =>
+      _qrCodeService.updateQrCode(docID, qrCode);
 
-  Future<void> deleteQrCode(String docID) {
-    return _qrCodeService.deleteQrCode(docID);
-  }
+  Future<void> deleteQrCode(final String docID) =>
+      _qrCodeService.deleteQrCode(docID);
 }

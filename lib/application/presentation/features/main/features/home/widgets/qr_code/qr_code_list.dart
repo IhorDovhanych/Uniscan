@@ -5,29 +5,29 @@ import 'package:uniscan/application/data/services/qr_code_service.dart';
 import 'package:uniscan/application/presentation/features/main/features/home/widgets/qr_code/qr_code_item.dart';
 import 'package:uniscan/application/presentation/widgets/buttons/logout/widget/logout.dart'; // Importing QrCodeItem
 
-class QrCodeList extends StatelessWidget {
-  final Stream<QuerySnapshot> qrCodeStream;
-  final QrCodeService qrCodeService;
-  final void Function({String? docID}) openQrCodeBox; // Update this line
+class QrCodeList extends StatelessWidget { // Update this line
 
   const QrCodeList({
-    Key? key,
+    final Key? key,
     required this.qrCodeStream,
     required this.qrCodeService,
     required this.openQrCodeBox,
   }) : super(key: key);
+  
+  final Stream<QuerySnapshot> qrCodeStream;
+  final QrCodeService qrCodeService;
+  final void Function({String? docID}) openQrCodeBox;
 
   @override
-  Widget build(BuildContext context) {
-    return StreamBuilder<QuerySnapshot>(
+  Widget build(final BuildContext context) => StreamBuilder<QuerySnapshot>(
       stream: qrCodeStream,
-      builder: (context, snapshot) {
+      builder: (final context, final snapshot) {
         if (snapshot.hasData) {
           List<DocumentSnapshot> qrCodesList = snapshot.data!.docs;
           return Scrollbar(
             child: ListView.builder(
               itemCount: qrCodesList.length + 1, // Add 1 for SizedBox
-              itemBuilder: (context, index) {
+              itemBuilder: (final context, final index) {
                 if (index < qrCodesList.length) {
                   DocumentSnapshot document = qrCodesList[index];
                   String docID = document.id;
@@ -76,5 +76,4 @@ class QrCodeList extends StatelessWidget {
         }
       },
     );
-  }
 }
