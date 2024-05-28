@@ -7,12 +7,11 @@ import 'package:uniscan/application/data/models/user.dart';
 
 abstract class UserService extends Disposable {
   Stream<UserModel?> get currentUserStream;
-  Future<UserModel?> get currentUserModel;
-  String? get currentUserId;
+  Future<UserModel?> get currentUser;
   Future<void> createUser(final UserModel user);
-  Future<void> addQrCodeToUser(String docID);
-  Future<void> getUsersQrCodes();
-  Future<void> deleteQrCodeFromUser(String docID);
+  Future<void> addQrCodeToUser(final String docID);
+  // Future<void> getUsersQrCodes();
+  Future<void> deleteQrCodeFromUser(final String docID);
 }
 
 class UserServiceImpl extends UserService {
@@ -26,39 +25,29 @@ class UserServiceImpl extends UserService {
   final CollectionReference<Map<String, dynamic>> _users;
   final FirebaseAuth _firebaseAuth;
   final _userStreamController = StreamController<UserModel?>.broadcast();
-  late StreamSubscription<User?> _firebaseUserSubscriptionStream;
-  StreamSubscription<Map<String, dynamic>?>? _userSubscriptionStream;
+  late StreamSubscription<User?> _subscriptionStream;
 
   @override
-  Stream<UserModel?> get currentUserStream => _userStreamController.stream;
+  Stream<UserModel?> get currentUserStream async* {
+    final user = await currentUser;
+    yield user;
+    yield* _userStreamController.stream;
+  }
 
   void _subscribeToFirebaseUserChanges() {
-    _firebaseUserSubscriptionStream = _firebaseAuth.authStateChanges().listen((final firebaseUser) async {
-      await _userSubscriptionStream?.cancel();
-      if (firebaseUser == null) {
-        _userStreamController.add(null);
-      } else {
-        _subscribeToUserChanges(firebaseUser.uid);
-      }
-    });
-  }
-
-  void _subscribeToUserChanges(final String userId) {
-    _userSubscriptionStream = _users.doc(userId).snapshots().map((final e) => e.data()).listen((final data) {
-      if (data != null) {
-        _userStreamController.add(UserModel.fromJson(data));
-      }
+    _subscriptionStream = _firebaseAuth.authStateChanges().listen((final firebaseUser) async {
+      final user = await _getUserFromFirestore(firebaseUser?.uid);
+      _userStreamController.add(user);
     });
   }
 
   @override
-  String? get currentUserId => _firebaseAuth.currentUser?.uid;
+  Future<UserModel?> get currentUser => _getUserFromFirestore(_firebaseAuth.currentUser?.uid);
 
-  @override
-  Future<UserModel?> get currentUserModel async {
-    final doc = await _users.doc(_firebaseAuth.currentUser?.uid).get();
-    final snapData = doc.data();
-    if (doc.exists && snapData != null) {
+  Future<UserModel?> _getUserFromFirestore(final String? id) async {
+    final doc = await _users.doc(id).get();
+    if (doc.exists) {
+      final snapData = doc.data()!;
       return UserModel.fromJson(snapData);
     } else {
       return null;
@@ -70,14 +59,15 @@ class UserServiceImpl extends UserService {
     final doc = await _users.doc(user.id).get();
     if (!doc.exists) {
       await _users.doc(user.id).set(user.toJson());
+      _userStreamController.add(user);
     } else {
       print('User already exists');
     }
   }
 
   @override
-  Future<void> addQrCodeToUser(String docID) async {
-    final user = await currentUserModel;
+  Future<void> addQrCodeToUser(final String docID) async {
+    final user = await currentUser;
     if (user == null) {
       return;
     }
@@ -92,9 +82,9 @@ class UserServiceImpl extends UserService {
     }
   }
 
-  @override
-  Future<List<String>> getUsersQrCodes() async {
-    return [];
+  // @override
+  // Future<List<String>> getUsersQrCodes() async {
+  //   return [];
     // UserEntity? u = await _userStream.first;
     // if (u != null) {
     //   var querySnapshot = await _users.where('id', isEqualTo: u.id).get();
@@ -110,33 +100,32 @@ class UserServiceImpl extends UserService {
     //   print('Empty user data');
     //   return [];
     // }
-  }
+// }
 
   @override
-  Future<void> deleteQrCodeFromUser(String docID) async {
-    // UserEntity? u = await _userStream.first;
-    // if (u != null) {
-    //   var querySnapshot = await _users.where('id', isEqualTo: u.id).get();
-    //   if (querySnapshot.docs.isNotEmpty) {
-    //     var documentSnapshot = querySnapshot.docs.first;
-    //     List<String> qrCodes = List<String>.from(documentSnapshot['qrCodes']);
-    //     qrCodes.remove(docID); // Remove the specified docID from qrCodes array
-    //     await documentSnapshot.reference.update({
-    //       'qrCodes': qrCodes,
-    //     });
-    //     print('QR code deleted successfully');
-    //   } else {
-    //     print('User document not found');
-    //   }
-    // } else {
-    //   print('Empty user data');
-    // }
+  Future<void> deleteQrCodeFromUser(final String docID) async {
+    final user = await currentUser;
+    if (user != null) {
+      final querySnapshot = await _users.where('id', isEqualTo: user.id).get();
+      if (querySnapshot.docs.isNotEmpty) {
+        final documentSnapshot = querySnapshot.docs.first;
+        final List<String> qrCodes = List<String>.from(documentSnapshot['qrCodes']);
+        qrCodes.remove(docID);
+        await documentSnapshot.reference.update({
+          'qrCodes': qrCodes,
+        });
+        print('QR code deleted successfully');
+      } else {
+        print('User document not found');
+      }
+    } else {
+      print('Empty user data');
+    }
   }
 
   @override
   FutureOr onDispose() {
-    _firebaseUserSubscriptionStream.cancel();
-    _userSubscriptionStream?.cancel();
+    _subscriptionStream.cancel();
     _userStreamController.close();
   }
 }

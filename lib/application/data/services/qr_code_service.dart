@@ -1,5 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:uniscan/application/data/models/geo_position.dart';
 import 'package:uniscan/application/data/models/qr_code.dart';
+import 'package:uniscan/application/data/services/geo_position_service.dart';
 import 'package:uniscan/application/data/services/user_service.dart';
 import 'package:uniscan/application/di/injections.dart';
 import 'package:uniscan/application/domain/entities/user_entity.dart';
@@ -15,16 +18,21 @@ abstract class QrCodeService {
 }
 
 class QrCodeServiceImpl extends QrCodeService {
+  QrCodeServiceImpl(this._userService, this._geoPositionService, this.qrCodes);
+
   final UserService _userService;
+  final GeoPositionService _geoPositionService;
   @override
   final CollectionReference qrCodes;
 
-  QrCodeServiceImpl(this._userService, this.qrCodes);
-
   @override
   Future<void> addQrCode(final QrCodeModel qrCode) async {
-    DocumentReference docRef = await qrCodes.add(toMap(qrCode));
-    _userService.addQrCodeToUser(docRef.id);
+    final Position pos = await _geoPositionService.determinePosition();
+    final GeoPositionModel geoPosition =
+        GeoPositionModel(latitude: pos.latitude, longitude: pos.longitude);
+    final DocumentReference docRef =
+        await qrCodes.add(toMap(qrCode, position: geoPosition));
+    await _userService.addQrCodeToUser(docRef.id);
   }
   //* CREATE
 
@@ -34,9 +42,9 @@ class QrCodeServiceImpl extends QrCodeService {
     CollectionReference users =
         await getIt<FirebaseFirestore>().collection('users');
     if (u != null) {
-      var userQuerySnapshot = await users.where('id', isEqualTo: u.id).get();
+      final userQuerySnapshot = await users.where('id', isEqualTo: u.id).get();
       if (userQuerySnapshot.docs.isNotEmpty) {
-        var userDocumentSnapshot = userQuerySnapshot.docs.first;
+        final userDocumentSnapshot = userQuerySnapshot.docs.first;
         List<String> userQrCodes =
             List<String>.from(userDocumentSnapshot['qrCodes']);
 
@@ -72,8 +80,8 @@ class QrCodeServiceImpl extends QrCodeService {
 //* READ/GET
 
   @override
-  Future<void> updateQrCode(final String docID, final QrCodeModel newQrCode)
-    => qrCodes.doc(docID).update(toMap(newQrCode, updated: true));
+  Future<void> updateQrCode(final String docID, final QrCodeModel newQrCode) =>
+      qrCodes.doc(docID).update(toMap(newQrCode, updated: true));
 //* UPDATE
 
   @override
@@ -83,13 +91,21 @@ class QrCodeServiceImpl extends QrCodeService {
   }
 //* DELETE
 
-  Map<String, dynamic> toMap(final QrCodeModel qrCode, {final bool updated = false}) => {
-      'name': qrCode.name,
-      'url': qrCode.url,
-      if (updated)
-        'updatedAt': DateTime.now()
-      else
-        'updatedAt': qrCode.updatedAt,
-      'createdAt': qrCode.createdAt,
-    };
+  Map<String, dynamic> toMap(final QrCodeModel qrCode,
+          {final bool updated = false, final GeoPositionModel? position}) =>
+      {
+        'name': qrCode.name,
+        'url': qrCode.url,
+        if (position != null)
+          'position': {
+            'latitude': position.latitude,
+            'longitude': position.longitude,
+            'meters': position.meters
+          },
+        if (updated)
+          'updatedAt': DateTime.now()
+        else
+          'updatedAt': qrCode.updatedAt,
+        'createdAt': qrCode.createdAt,
+      };
 }

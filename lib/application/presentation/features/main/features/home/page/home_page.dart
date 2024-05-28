@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:uniscan/application/data/models/qr_code.dart';
 import 'package:uniscan/application/data/services/camera_service.dart';
-import 'package:uniscan/application/data/services/geo_location_service.dart';
+import 'package:uniscan/application/data/services/geo_position_service.dart';
 import 'package:uniscan/application/data/services/qr_code_service.dart';
 import 'package:uniscan/application/di/injections.dart';
 import 'package:uniscan/application/presentation/features/main/features/home/widgets/custom_app_bar.dart';
@@ -37,8 +37,8 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _initializePermissions() async {
-    // Ask for geo location permissions
-    await getIt<GeoLocationService>().getPermissions();
+    // Ask for geo position permissions
+    await getIt<GeoPositionService>().getPermissions();
     // Ask for camera permissions
     await getIt<CameraService>().getPermissions();
   }

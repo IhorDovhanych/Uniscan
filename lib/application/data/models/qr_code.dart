@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:uniscan/application/data/models/geo_location.dart';
+import 'package:uniscan/application/data/models/geo_position.dart';
 
 @immutable
 class QrCodeModel {
@@ -7,7 +7,7 @@ class QrCodeModel {
     this.id = '',
     required this.name,
     required this.url,
-    this.geoLocation
+    this.GeoPosition
   });
 
   factory QrCodeModel.fromJson(final Map<String, dynamic> json) => QrCodeModel(
@@ -18,7 +18,7 @@ class QrCodeModel {
   final String id;
   final String name;
   final String url;
-  final GeoLocationModel? geoLocation;
+  final GeoPositionModel? GeoPosition;
   final DateTime createdAt = DateTime.now();
   final DateTime updatedAt = DateTime.now();
 

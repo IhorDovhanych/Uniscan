@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:geolocator/geolocator.dart';
 
-abstract class GeoLocationService {
+abstract class GeoPositionService {
   Future<void> getPermissions();
   Future<Position> determinePosition();
   Future<void> ensureLocationServiceEnabled();
@@ -11,8 +11,8 @@ abstract class GeoLocationService {
   Future<Stream<Position>> getPositionStream();
 }
 
-class GeoLocationServiceImpl implements GeoLocationService {
-  GeoLocationServiceImpl();
+class GeoPositionServiceImpl implements GeoPositionService {
+  GeoPositionServiceImpl();
 
   @override
   Future<void> getPermissions() async {
@@ -63,7 +63,7 @@ class GeoLocationServiceImpl implements GeoLocationService {
           intervalDuration: const Duration(seconds: 10),
           foregroundNotificationConfig: const ForegroundNotificationConfig(
             notificationText:
-                "Example app will continue to receive your location even when you aren't using it",
+                "Example app will continue to receive your position even when you aren't using it",
             notificationTitle: "Running in Background",
             enableWakeLock: true,
           ));
