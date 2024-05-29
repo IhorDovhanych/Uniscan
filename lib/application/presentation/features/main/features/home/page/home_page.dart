@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:permission_handler/permission_handler.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uniscan/application/data/models/qr_code.dart';
 import 'package:uniscan/application/data/services/camera_service.dart';
 import 'package:uniscan/application/data/services/geo_position_service.dart';
 import 'package:uniscan/application/data/services/qr_code_service.dart';
 import 'package:uniscan/application/di/injections.dart';
+import 'package:uniscan/application/presentation/features/main/features/home/cubit/home_cubit.dart';
 import 'package:uniscan/application/presentation/features/main/features/home/widgets/custom_app_bar.dart';
 import 'package:uniscan/application/presentation/features/main/features/home/widgets/qr_code/qr_code_dialog.dart';
 import 'package:uniscan/application/presentation/features/main/features/home/widgets/qr_code/qr_code_list.dart';
@@ -71,7 +72,9 @@ class _HomePageState extends State<HomePage> {
   }
 
   @override
-  Widget build(final BuildContext context) => Scaffold(
+  Widget build(final BuildContext context) => BlocProvider<HomeCubit>(
+      create: (final _) => getIt<HomeCubit>(),
+      child: Scaffold(
         appBar: CustomAppBar(),
         floatingActionButton: FloatingActionButton(
           onPressed: openQrCodeBox,
@@ -84,10 +87,9 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
         body: QrCodeList(
-          qrCodeStream: qrCodeService.getQrCodesStream(),
           qrCodeService: qrCodeService,
           openQrCodeBox:
-              openQrCodeBox, // Pass the function without named parameters
+              openQrCodeBox,
         ),
-      );
+      ));
 }

@@ -3,12 +3,8 @@ import 'package:uniscan/application/data/models/geo_position.dart';
 
 @immutable
 class QrCodeModel {
-  QrCodeModel({
-    this.id = '',
-    required this.name,
-    required this.url,
-    this.GeoPosition
-  });
+  QrCodeModel(
+      {this.id = '', required this.name, required this.url, this.geoPosition});
 
   factory QrCodeModel.fromJson(final Map<String, dynamic> json) => QrCodeModel(
         id: json['id'],
@@ -18,7 +14,7 @@ class QrCodeModel {
   final String id;
   final String name;
   final String url;
-  final GeoPositionModel? GeoPosition;
+  final GeoPositionModel? geoPosition;
   final DateTime createdAt = DateTime.now();
   final DateTime updatedAt = DateTime.now();
 
@@ -39,4 +35,17 @@ class QrCodeModel {
       throw ArgumentError('Invalid URL: $url');
     }
   }
+
+  QrCodeModel copyWith({
+    final String? id,
+    final String? name,
+    final String? url,
+    final GeoPositionModel? geoPosition,
+  }) =>
+      QrCodeModel(
+        id: id ?? this.id,
+        name: name ?? this.name,
+        url: url ?? this.url,
+        geoPosition: geoPosition ?? this.geoPosition,
+      );
 }

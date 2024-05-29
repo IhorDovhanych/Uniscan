@@ -1,6 +1,4 @@
-import 'package:equatable/equatable.dart';
-import 'package:uniscan/application/domain/entities/qr_code_entity.dart';
-
+part of 'home_cubit.dart';
 class HomeState extends Equatable{
 
   HomeState({this.qrCodes = const []});

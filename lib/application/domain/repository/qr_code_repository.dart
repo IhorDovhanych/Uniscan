@@ -1,10 +1,8 @@
-import 'package:dartz/dartz.dart';
-import 'package:uniscan/application/data/models/qr_code.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:uniscan/application/domain/entities/qr_code_entity.dart';
-import 'package:uniscan/core/error/failures.dart';
 
 abstract class QrCodeRepository {
-  Future<Either<Failure, QrCodeEntity>> getUsersQrCodes(List<QrCodeModel> qrCodesList);
-
-  Future<void> addQrCode(QrCodeModel qrCode);
+  CollectionReference get qrCodes;
+  Stream<List<QrCodeEntity>> getQrCodesStream();
+  Future<QrCodeEntity>? getQrCodeById(final String docID);
 }

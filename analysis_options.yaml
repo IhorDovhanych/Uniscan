@@ -95,7 +95,7 @@ linter:
     unawaited_futures: true
     unnecessary_await_in_return: true
     avoid_redundant_argument_values: true
-    omit_local_variable_types: true
+    omit_local_variable_types: false
     prefer_interpolation_to_compose_strings: true
 
     no_leading_underscores_for_local_identifiers: false
