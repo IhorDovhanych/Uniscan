@@ -7,7 +7,7 @@ class QrCodeEntity extends Equatable {
     required this.name,
     required this.url,
     //required this.category,
-    this.position,
+    this.geoPosition,
     required this.createdAt,
     required this.updatedAt,
   }) : super();
@@ -16,7 +16,7 @@ class QrCodeEntity extends Equatable {
   final String name;
   final String url;
   //final Category category;
-  final GeoPositionModel? position;
+  final GeoPositionModel? geoPosition;
   final DateTime createdAt;
   final DateTime updatedAt;
 
@@ -30,9 +30,9 @@ class QrCodeEntity extends Equatable {
       updatedAt
     ];
 
-    if (position != null) {
+    if (geoPosition != null) {
       propsList
-          .addAll([position!.latitude, position!.longitude, position!.meters]);
+          .addAll([geoPosition!.latitude, geoPosition!.longitude, geoPosition!.meters]);
     }
 
     return propsList;

@@ -24,7 +24,9 @@ class QrCodeList extends StatelessWidget {
             (previous == null && current != null) ||
             (previous != null && current == null) ||
             (previous?.length != current?.length),
-        listener: (final context, final state) {},
+        listener: (final context, final state) {
+          print('hi');
+        },
         child: BlocBuilder<HomeCubit, List<QrCodeEntity>?>(
           builder: (final context, final qrCodesList) {
             if (qrCodesList != null && qrCodesList.isNotEmpty) {

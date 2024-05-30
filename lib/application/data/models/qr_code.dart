@@ -6,11 +6,23 @@ class QrCodeModel {
   QrCodeModel(
       {this.id = '', required this.name, required this.url, this.geoPosition});
 
-  factory QrCodeModel.fromJson(final Map<String, dynamic> json) => QrCodeModel(
-        id: json['id'],
-        name: json['name'],
-        url: json['url'],
-      );
+  factory QrCodeModel.fromJson(final Map<String, dynamic> json) {
+  final geoPositionJson = json['geoPosition'];
+  GeoPositionModel? geoPosition;
+  if (geoPositionJson != null) {
+    geoPosition = GeoPositionModel(
+      latitude: geoPositionJson['latitude'],
+      longitude: geoPositionJson['longitude'],
+      meters: geoPositionJson['meters'],
+    );
+  }
+  return QrCodeModel(
+    id: json['id'],
+    name: json['name'],
+    url: json['url'],
+    geoPosition: geoPosition,
+  );
+}
   final String id;
   final String name;
   final String url;

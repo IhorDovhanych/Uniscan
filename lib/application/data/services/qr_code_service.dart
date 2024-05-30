@@ -12,6 +12,8 @@ abstract class QrCodeService {
   Future<QrCodeModel>? getQrCodeById(final String docID);
   Future<void> updateQrCode(final String docID, final QrCodeModel newQrCode);
   Future<void> deleteQrCode(final String docID);
+  Future<List<QrCodeModel>> getNearbyQrCodes(
+      final double latitude, final double longitude);
 }
 
 class QrCodeServiceImpl extends QrCodeService {
@@ -23,25 +25,33 @@ class QrCodeServiceImpl extends QrCodeService {
   final CollectionReference qrCodes;
 
   @override
-Future<void> addQrCode(final QrCodeModel qrCode) async {
-  final Position pos = await _geoPositionService.determinePosition();
-  final GeoPositionModel geoPosition =
-      GeoPositionModel(latitude: pos.latitude, longitude: pos.longitude);
-  final DocumentReference docRef =
-      await qrCodes.add(toMap(qrCode, position: geoPosition));
-  final String documentId = docRef.id;
-  final QrCodeModel updatedQrCode = qrCode.copyWith(id: documentId);
-  await qrCodes.doc(documentId).set(toMap(updatedQrCode, position: geoPosition));
-  await _userService.addQrCodeToUser(documentId);
-}
+  Future<void> addQrCode(final QrCodeModel qrCode) async {
+    final Position pos = await _geoPositionService.determinePosition();
+    final GeoPositionModel geoPosition =
+        GeoPositionModel(latitude: pos.latitude, longitude: pos.longitude);
+    final DocumentReference docRef =
+        await qrCodes.add(toMap(qrCode, geoPosition: geoPosition));
+    final String documentId = docRef.id;
+    final QrCodeModel updatedQrCode = qrCode.copyWith(id: documentId);
+    await qrCodes
+        .doc(documentId)
+        .set(toMap(updatedQrCode, geoPosition: geoPosition));
+    await _userService.addQrCodeToUser(documentId);
+  }
   //* CREATE
 
   @override
   Stream<List<QrCodeModel>> getQrCodesStream() async* {
     final user = await _userService.currentUser;
-    yield* qrCodes.where(FieldPath.documentId, whereIn: user?.qrCodes).snapshots().map((final event) {
+    yield* qrCodes
+        .where(FieldPath.documentId, whereIn: user?.qrCodes)
+        .snapshots()
+        .map((final event) {
       final docs = event.docs;
-      return docs.map((final e) => QrCodeModel.fromJson(e.data()! as Map<String, dynamic>)).toList();
+      return docs
+          .map((final e) =>
+              QrCodeModel.fromJson(e.data()! as Map<String, dynamic>))
+          .toList();
     });
   }
 //* READ/GET
@@ -70,18 +80,39 @@ Future<void> addQrCode(final QrCodeModel qrCode) async {
   }
 //* DELETE
 
+  Future<List<QrCodeModel>> getNearbyQrCodes(
+      final double latitude, final double longitude) async {
+    final QuerySnapshot querySnapshot = await qrCodes.get();
+    final List<QrCodeModel> qrCodesList = querySnapshot.docs
+        .map((final doc) =>
+            QrCodeModel.fromJson(doc.data()! as Map<String, dynamic>))
+        .toList();
+
+    return qrCodesList.where((final qrCode) {
+      if (qrCode.geoPosition != null) {
+        final double distance = Geolocator.distanceBetween(
+          latitude,
+          longitude,
+          qrCode.geoPosition!.latitude,
+          qrCode.geoPosition!.longitude,
+        );
+        return distance <= qrCode.geoPosition!.meters;
+      }
+      return false;
+    }).toList();
+  }
+
   Map<String, dynamic> toMap(final QrCodeModel qrCode,
-          {final bool updated = false, final GeoPositionModel? position}) =>
+          {final bool updated = false, final GeoPositionModel? geoPosition}) =>
       {
-        if(qrCode.id != null)
-          'id': qrCode.id,
+        if (qrCode.id != null) 'id': qrCode.id,
         'name': qrCode.name,
         'url': qrCode.url,
-        if (position != null)
-          'position': {
-            'latitude': position.latitude,
-            'longitude': position.longitude,
-            'meters': position.meters
+        if (geoPosition != null)
+          'geoPosition': {
+            'latitude': geoPosition.latitude,
+            'longitude': geoPosition.longitude,
+            'meters': geoPosition.meters
           },
         if (updated)
           'updatedAt': DateTime.now()

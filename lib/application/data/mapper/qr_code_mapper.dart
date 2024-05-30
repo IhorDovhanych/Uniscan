@@ -6,7 +6,7 @@ extension QrCodeEntityX on QrCodeEntity {
         id: id, // Якщо потрібно, заповніть ідентифікатор
         name: name,
         url: url,
-        geoPosition: position,
+        geoPosition: geoPosition,
       );
 }
 
@@ -15,7 +15,7 @@ extension QrCodeModelX on QrCodeModel {
         id: id,
         name: name,
         url: url,
-        position: geoPosition,
+        geoPosition: geoPosition,
         createdAt: createdAt,
         updatedAt: updatedAt,
       );
