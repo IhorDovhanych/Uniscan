@@ -6,11 +6,11 @@ import 'package:uniscan/application/data/services/geo_position_service.dart';
 import 'package:uniscan/application/data/services/user_service.dart';
 
 abstract class QrCodeService {
-  CollectionReference get qrCodes;
+  CollectionReference<Map<String, dynamic>> get qrCodes;
   Future<void> addQrCode(final QrCodeModel qrCode);
-  Stream<List<QrCodeModel>> getQrCodesStream();
+  Stream<List<QrCodeModel>> get getCreatedByMeQrCodesStream;
   Future<QrCodeModel>? getQrCodeById(final String docID);
-  Future<void> updateQrCode(final String docID, final QrCodeModel newQrCode);
+  Future<void> updateQrCode(final QrCodeModel newQrCode);
   Future<void> deleteQrCode(final String docID);
 }
 
@@ -20,28 +20,30 @@ class QrCodeServiceImpl extends QrCodeService {
   final UserService _userService;
   final GeoPositionService _geoPositionService;
   @override
-  final CollectionReference qrCodes;
+  final CollectionReference<Map<String, dynamic>> qrCodes;
 
   @override
-Future<void> addQrCode(final QrCodeModel qrCode) async {
-  final Position pos = await _geoPositionService.determinePosition();
-  final GeoPositionModel geoPosition =
-      GeoPositionModel(latitude: pos.latitude, longitude: pos.longitude);
-  final DocumentReference docRef =
-      await qrCodes.add(toMap(qrCode, position: geoPosition));
-  final String documentId = docRef.id;
-  final QrCodeModel updatedQrCode = qrCode.copyWith(id: documentId);
-  await qrCodes.doc(documentId).set(toMap(updatedQrCode, position: geoPosition));
-  await _userService.addQrCodeToUser(documentId);
-}
+  Future<void> addQrCode(final QrCodeModel qrCode) async {
+    final Position pos = await _geoPositionService.determinePosition();
+    final GeoPositionModel geoPosition = GeoPositionModel(latitude: pos.latitude, longitude: pos.longitude);
+
+    final updatedQrCode = qrCode.copyWith(
+      geoPosition: geoPosition,
+      creatorId: _userService.currentUserId,
+      updatedAt: DateTime.now(),
+      createdAt: DateTime.now(),
+    );
+    final docRef = await qrCodes.add(updatedQrCode.toJson());
+    await qrCodes.doc(docRef.id).set(updatedQrCode.copyWith(id: docRef.id).toJson());
+    await _userService.addQrCodeToUser(docRef.id);
+  }
   //* CREATE
 
   @override
-  Stream<List<QrCodeModel>> getQrCodesStream() async* {
-    final user = await _userService.currentUser;
-    yield* qrCodes.where(FieldPath.documentId, whereIn: user?.qrCodes).snapshots().map((final event) {
+  Stream<List<QrCodeModel>> get getCreatedByMeQrCodesStream async* {
+    yield* qrCodes.where('creatorId', isEqualTo: _userService.currentUserId).snapshots().map((final event) {
       final docs = event.docs;
-      return docs.map((final e) => QrCodeModel.fromJson(e.data()! as Map<String, dynamic>)).toList();
+      return docs.map((final e) => QrCodeModel.fromJson(e.data())).toList();
     });
   }
 //* READ/GET
@@ -49,18 +51,20 @@ Future<void> addQrCode(final QrCodeModel qrCode) async {
   @override
   Future<QrCodeModel>? getQrCodeById(final String docID) async {
     try {
-      final DocumentSnapshot doc = await qrCodes.doc(docID).get();
-      final Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-      return QrCodeModel(name: data['name'], url: data['url']);
+      final doc = await qrCodes.doc(docID).get();
+      return QrCodeModel.fromJson(doc.data()!);
     } catch (e) {
-      throw Exception("Error getting document: $e");
+      throw Exception('Error getting document: $e');
     }
   }
 //* READ/GET
 
   @override
-  Future<void> updateQrCode(final String docID, final QrCodeModel newQrCode) =>
-      qrCodes.doc(docID).update(toMap(newQrCode, updated: true));
+  Future<void> updateQrCode(final QrCodeModel qrCode) => qrCodes.doc(qrCode.id).update(qrCode
+      .copyWith(
+        updatedAt: DateTime.now(),
+      )
+      .toJson());
 //* UPDATE
 
   @override
@@ -69,24 +73,4 @@ Future<void> addQrCode(final QrCodeModel qrCode) async {
     return qrCodes.doc(docID).delete();
   }
 //* DELETE
-
-  Map<String, dynamic> toMap(final QrCodeModel qrCode,
-          {final bool updated = false, final GeoPositionModel? position}) =>
-      {
-        if(qrCode.id != null)
-          'id': qrCode.id,
-        'name': qrCode.name,
-        'url': qrCode.url,
-        if (position != null)
-          'position': {
-            'latitude': position.latitude,
-            'longitude': position.longitude,
-            'meters': position.meters
-          },
-        if (updated)
-          'updatedAt': DateTime.now()
-        else
-          'updatedAt': qrCode.updatedAt,
-        'createdAt': qrCode.createdAt,
-      };
 }

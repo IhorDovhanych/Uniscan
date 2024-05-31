@@ -17,8 +17,9 @@ import 'package:uniscan/application/domain/usecase/log_in_with_google_use_case.d
 import 'package:uniscan/application/domain/usecase/log_out_use_case.dart';
 import 'package:uniscan/application/presentation/cubit/auth_cubit.dart';
 import 'package:uniscan/application/presentation/features/login/cubit/login_cubit.dart';
+import 'package:uniscan/application/presentation/features/main/cubit/main_cubit.dart';
 import 'package:uniscan/application/presentation/features/main/features/home/cubit/home_cubit.dart';
-import 'package:uniscan/application/presentation/widgets/buttons/logout/cubit/logout_cubit.dart';
+import 'package:uniscan/application/presentation/features/main/features/home/widgets/qr_code/cubit/qr_code_cubit.dart';
 import 'package:uniscan/core/firebase/firebase_keys.dart';
 import 'package:uniscan/firebase_options.dart';
 
@@ -46,18 +47,15 @@ void _initAppScope(final GetIt getIt) {
         getIt<UserService>(),
       ));
   getIt.registerLazySingleton<UserService>(() => UserServiceImpl(
-        getIt<FirebaseFirestore>()
-            .collection(FirestoreKeys.collection_name_users),
+        getIt<FirebaseFirestore>().collection(FirestoreKeys.collection_name_users),
         getIt<FirebaseAuth>(),
       ));
   getIt.registerLazySingleton<QrCodeService>(() => QrCodeServiceImpl(
         getIt<UserService>(),
         getIt<GeoPositionService>(),
-        getIt<FirebaseFirestore>()
-            .collection(FirestoreKeys.collection_qr_codes),
+        getIt<FirebaseFirestore>().collection(FirestoreKeys.collection_qr_codes),
       ));
-  getIt.registerLazySingleton<GeoPositionService>(
-      () => GeoPositionServiceImpl());
+  getIt.registerLazySingleton<GeoPositionService>(() => GeoPositionServiceImpl());
   getIt.registerLazySingleton<CameraService>(() => CameraServiceImpl());
   //endregion
 
@@ -66,19 +64,14 @@ void _initAppScope(final GetIt getIt) {
         getIt<AuthService>(),
         getIt<UserService>(),
       ));
-  getIt.registerLazySingleton<QrCodeRepository>(
-      () => QrCodeRepositoryImpl(getIt<QrCodeService>()));
+  getIt.registerLazySingleton<QrCodeRepository>(() => QrCodeRepositoryImpl(getIt<QrCodeService>()));
   //endregion
 
   //region Use cases
-  getIt.registerFactory<GetUserStreamUseCase>(
-      () => GetUserStreamUseCase(getIt<AuthRepository>()));
-  getIt.registerFactory<GetQrCodesStreamUseCase>(
-      () => GetQrCodesStreamUseCase(getIt<QrCodeRepository>()));
-  getIt.registerFactory<LogInWithGoogleUseCase>(
-      () => LogInWithGoogleUseCase(getIt<AuthRepository>()));
-  getIt.registerFactory<LogOutUseCase>(
-      () => LogOutUseCase(getIt<AuthRepository>()));
+  getIt.registerFactory<GetUserStreamUseCase>(() => GetUserStreamUseCase(getIt<AuthRepository>()));
+  getIt.registerFactory<GetQrCodesStreamUseCase>(() => GetQrCodesStreamUseCase(getIt<QrCodeRepository>()));
+  getIt.registerFactory<LogInWithGoogleUseCase>(() => LogInWithGoogleUseCase(getIt<AuthRepository>()));
+  getIt.registerFactory<LogOutUseCase>(() => LogOutUseCase(getIt<AuthRepository>()));
   //endregion
 
   //region Cubits
@@ -86,10 +79,13 @@ void _initAppScope(final GetIt getIt) {
         getIt<GetUserStreamUseCase>(),
         getIt<LogOutUseCase>(),
       ));
-  getIt.registerFactory<LoginCubit>(
-      () => LoginCubit(getIt<LogInWithGoogleUseCase>()));
-  getIt.registerFactory<LogoutCubit>(() => LogoutCubit(getIt<LogOutUseCase>()));
-  getIt.registerFactory<HomeCubit>(() => HomeCubit(getIt<GetQrCodesStreamUseCase>()));
+  getIt.registerFactory<LoginCubit>(() => LoginCubit(getIt<LogInWithGoogleUseCase>()));
+  getIt.registerFactory<MainCubit>(() => MainCubit());
+  getIt.registerFactory<HomeCubit>(() => HomeCubit(
+        getIt<GetQrCodesStreamUseCase>(),
+        getIt<QrCodeRepository>(),
+      ));
+  getIt.registerFactory<QrCodeCubit>(() => QrCodeCubit(getIt<QrCodeRepository>()));
   //endregion
 }
 

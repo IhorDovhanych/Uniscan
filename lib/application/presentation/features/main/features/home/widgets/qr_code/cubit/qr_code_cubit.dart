@@ -1,20 +1,50 @@
 import 'package:equatable/equatable.dart';
-import 'package:uniscan/application/data/models/qr_code.dart';
-import 'package:uniscan/application/data/services/qr_code_service.dart';
+import 'package:uniscan/application/domain/entities/qr_code_entity.dart';
+import 'package:uniscan/application/domain/repository/qr_code_repository.dart';
 import 'package:uniscan/core/cubit/cubit_base.dart';
 
 part 'qr_code_state.dart';
 
 class QrCodeCubit extends CubitBase<QrCodeState> {
-  QrCodeCubit(this._qrCodeService) : super(const QrCodeState());
-  final QrCodeService _qrCodeService;
+  QrCodeCubit(this._qrCodeRepository)
+      : super(QrCodeState(
+          qrCode: QrCodeEntity.empty(),
+        ));
 
-  Future<void> addQrCode(final QrCodeModel qrCode) =>
-      _qrCodeService.addQrCode(qrCode);
+  final QrCodeRepository _qrCodeRepository;
 
-  Future<void> updateQrCode(final String docID, final QrCodeModel qrCode) =>
-      _qrCodeService.updateQrCode(docID, qrCode);
+  void init(final QrCodeEntity? qrCode, final String? url) {
+    emit(state.copyWith(qrCode: qrCode));
+    final newQrCode = state.qrCode.copyWith(url: url);
+    emit(state.copyWith(qrCode: newQrCode));
+  }
 
-  Future<void> deleteQrCode(final String docID) =>
-      _qrCodeService.deleteQrCode(docID);
+  void onChangeName(final String name) {
+    final qrCode = state.qrCode.copyWith(name: name);
+    emit(state.copyWith(qrCode: qrCode));
+  }
+
+  void onChangeUrl(final String url) {
+    final qrCode = state.qrCode.copyWith(url: url);
+    emit(state.copyWith(qrCode: qrCode));
+  }
+
+  Future<void> addQrCode() async {
+    emit(state.copyWith(isLoading: true));
+    final result = await executeAsync(_qrCodeRepository.addQrCode(state.qrCode));
+    result.fold(
+      (final l) => emit(state.copyWith(error: l, isLoading: false)),
+      (final r) => emit(state.copyWith(success: true)),
+    );
+  }
+
+  Future<void> updateQrCode() async {
+    emit(state.copyWith(isLoading: true));
+
+    final result = await executeAsync(_qrCodeRepository.updateQrCode(state.qrCode));
+    result.fold(
+      (final l) => emit(state.copyWith(error: l, isLoading: false)),
+      (final r) => emit(state.copyWith(success: true)),
+    );
+  }
 }
