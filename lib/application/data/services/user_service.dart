@@ -8,6 +8,7 @@ import 'package:uniscan/application/data/models/user.dart';
 abstract class UserService extends Disposable {
   Stream<UserModel?> get currentUserStream;
   Future<UserModel?> get currentUser;
+  String? get currentUserId;
   Future<void> createUser(final UserModel user);
   Future<void> addQrCodeToUser(final String docID);
   // Future<void> getUsersQrCodes();
@@ -43,6 +44,9 @@ class UserServiceImpl extends UserService {
 
   @override
   Future<UserModel?> get currentUser => _getUserFromFirestore(_firebaseAuth.currentUser?.uid);
+
+  @override
+  String? get currentUserId => _firebaseAuth.currentUser?.uid;
 
   Future<UserModel?> _getUserFromFirestore(final String? id) async {
     final doc = await _users.doc(id).get();
@@ -85,21 +89,21 @@ class UserServiceImpl extends UserService {
   // @override
   // Future<List<String>> getUsersQrCodes() async {
   //   return [];
-    // UserEntity? u = await _userStream.first;
-    // if (u != null) {
-    //   var querySnapshot = await _users.where('id', isEqualTo: u.id).get();
-    //   if (querySnapshot.docs.isNotEmpty) {
-    //     var documentSnapshot = querySnapshot.docs.first;
-    //     List<String> qrCodes = List<String>.from(documentSnapshot['qrCodes']);
-    //     return qrCodes;
-    //   } else {
-    //     print('User document not found');
-    //     return [];
-    //   }
-    // } else {
-    //   print('Empty user data');
-    //   return [];
-    // }
+  // UserEntity? u = await _userStream.first;
+  // if (u != null) {
+  //   var querySnapshot = await _users.where('id', isEqualTo: u.id).get();
+  //   if (querySnapshot.docs.isNotEmpty) {
+  //     var documentSnapshot = querySnapshot.docs.first;
+  //     List<String> qrCodes = List<String>.from(documentSnapshot['qrCodes']);
+  //     return qrCodes;
+  //   } else {
+  //     print('User document not found');
+  //     return [];
+  //   }
+  // } else {
+  //   print('Empty user data');
+  //   return [];
+  // }
 // }
 
   @override

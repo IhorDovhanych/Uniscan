@@ -30,8 +30,7 @@ class MyApp extends StatelessWidget {
   final _appRouter = AppRouter();
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp.router(
+  Widget build(final BuildContext context) => MaterialApp.router(
         localizationsDelegates: const [
           S.delegate,
           GlobalMaterialLocalizations.delegate,
@@ -44,5 +43,4 @@ class MyApp extends StatelessWidget {
         routerDelegate: _appRouter.delegate(),
         routeInformationParser: _appRouter.defaultRouteParser(),
         builder: (final context, final child) => child!);
-  }
 }

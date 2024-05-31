@@ -1,10 +1,11 @@
 import 'package:dartz/dartz.dart';
-import 'package:uniscan/application/data/models/qr_code.dart';
 import 'package:uniscan/application/domain/entities/qr_code_entity.dart';
-import 'package:uniscan/core/error/failures.dart';
+import 'package:uniscan/core/error/base_exception.dart';
 
 abstract class QrCodeRepository {
-  Future<Either<Failure, QrCodeEntity>> getUsersQrCodes(List<QrCodeModel> qrCodesList);
-
-  Future<void> addQrCode(QrCodeModel qrCode);
+  Stream<List<QrCodeEntity>> getQrCodesStream();
+  Future<Either<BaseException, void>> getQrCodeById(final String docID);
+  Future<Either<BaseException, void>> addQrCode(final QrCodeEntity qrCode);
+  Future<Either<BaseException, void>> updateQrCode(final QrCodeEntity qrCode);
+  Future<Either<BaseException, void>> deleteQrCode(final String qrCodeId);
 }

@@ -1,18 +1,36 @@
 part of 'qr_code_cubit.dart';
 
-class QrCodeState extends Equatable{
-  const QrCodeState({this.docID, this.qrCode});
-  final String? docID;
-  final QrCodeModel? qrCode;
+class QrCodeState extends Equatable {
+  const QrCodeState({
+    required this.qrCode,
+    this.success = false,
+    this.isLoading = false,
+    this.error,
+  });
+
+  final QrCodeEntity qrCode;
+  final bool success;
+  final bool isLoading;
+  final dynamic error;
 
   @override
-  List<Object?> get props => [docID, qrCode];
+  List<Object?> get props => [
+        qrCode,
+        success,
+        isLoading,
+        error,
+      ];
+
   QrCodeState copyWith({
-      final String? docID,
-      final QrCodeModel? qrCode
+    final QrCodeEntity? qrCode,
+    final bool? success,
+    final bool? isLoading,
+    final dynamic error,
   }) =>
       QrCodeState(
-        docID: docID,
-        qrCode: qrCode,
+        qrCode: qrCode ?? this.qrCode,
+        success: success ?? this.success,
+        isLoading: isLoading ?? this.isLoading,
+        error: error,
       );
 }
