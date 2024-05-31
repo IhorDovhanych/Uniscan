@@ -1,9 +1,12 @@
+import 'dart:js';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uniscan/application/data/models/qr_code.dart';
 import 'package:uniscan/application/data/services/qr_code_service.dart';
 import 'package:uniscan/application/di/injections.dart';
 import 'package:uniscan/application/presentation/features/main/features/home/widgets/qr_code/cubit/qr_code_cubit.dart';
+import 'package:uniscan/generated/l10n.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class QrCodeDialog extends StatelessWidget {
@@ -31,21 +34,21 @@ class QrCodeDialog extends StatelessWidget {
                 content: Column(
                   children: [
                     Text(
-                      docID == null ? 'Add QR Code' : 'Edit QR Code',
+                      docID == null ? S.of(context).add_qr_code : S.of(context).edit_qr_code,
                       style: const TextStyle(fontSize: 20),
                     ),
                     TextField(
                       controller: nameTextController,
-                      decoration: const InputDecoration(
-                        labelText: 'Name',
-                        hintText: 'QR code name',
+                      decoration: InputDecoration(
+                        labelText: S.of(context).name,
+                        hintText: S.of(context).qr_code_name,
                       ),
                     ),
                     TextField(
                       controller: urlTextController,
-                      decoration: const InputDecoration(
-                        labelText: 'URL',
-                        hintText: 'https://example.com',
+                      decoration: InputDecoration(
+                        labelText: S.of(context).url,
+                        hintText: S.of(context).example_url,
                       ),
                     ),
                   ],
@@ -55,7 +58,7 @@ class QrCodeDialog extends StatelessWidget {
                       ? ElevatedButton(
                           onPressed: () {
                             try {
-                              QrCodeModel qrCode = QrCodeModel(
+                              final QrCodeModel qrCode = QrCodeModel(
                                   name: nameTextController.text,
                                   url: urlTextController.text);
                               if (docID == null) {
@@ -77,14 +80,14 @@ class QrCodeDialog extends StatelessWidget {
                           },
                           child: docID == null
                               ? Text(
-                                  'Add',
+                                  S.of(context).add,
                                   style: TextStyle(color: Colors.black),
                                 )
-                              : const Text(
-                                  'Update',
+                              : Text(
+                                  S.of(context).update,
                                   style: TextStyle(
                                       color: Colors
-                                          .black), // Customize color for update
+                                          .black)
                                 ),
                         )
                       : Row(
@@ -93,7 +96,7 @@ class QrCodeDialog extends StatelessWidget {
                             ElevatedButton(
                                 onPressed: () {
                                   try {
-                                    QrCodeModel qrCode = QrCodeModel(
+                                    final QrCodeModel qrCode = QrCodeModel(
                                         name: nameTextController.text,
                                         url: urlTextController.text);
                                     context
@@ -110,13 +113,13 @@ class QrCodeDialog extends StatelessWidget {
                                   }
                                 },
                                 child: Text(
-                                  'Add',
+                                  S.of(context).add,
                                   style: TextStyle(color: Colors.black),
                                 )),
                             ElevatedButton(
                                 onPressed: () {
                                   try {
-                                    QrCodeModel qrCode = QrCodeModel(
+                                    final QrCodeModel qrCode = QrCodeModel(
                                         name: nameTextController.text,
                                         url: urlTextController.text);
                                     qrCodeService.addQrCode(qrCode);
@@ -132,8 +135,8 @@ class QrCodeDialog extends StatelessWidget {
                                     urlTextController.clear();
                                   }
                                 },
-                                child: const Text(
-                                  'Add and visit',
+                                child: Text(
+                                  S.of(context).add_and_visit,
                                   style: TextStyle(color: Colors.black),
                                 ))
                           ],

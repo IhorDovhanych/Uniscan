@@ -10,6 +10,7 @@ import 'package:uniscan/application/presentation/features/main/features/home/cub
 import 'package:uniscan/application/presentation/features/main/features/home/widgets/custom_app_bar.dart';
 import 'package:uniscan/application/presentation/features/main/features/home/widgets/qr_code/qr_code_dialog.dart';
 import 'package:uniscan/application/presentation/features/main/features/home/widgets/qr_code/qr_code_list.dart';
+import 'package:uniscan/generated/l10n.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class HomePage extends StatefulWidget {
@@ -70,17 +71,17 @@ class _HomePageState extends State<HomePage> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Nearest QR Code'),
+        title: Text(S.of(context).nearest_qr_code),
         content: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text('Name: ${qrCode.name}'),
+            Text('${S.of(context).name}: ${qrCode.name}'),
             // Making the URL clickable using RichText
             InkWell(
               onTap: () => launchUrl(Uri.parse(qrCode.url)),
               child: Text(
-                'URL: ${qrCode.url} ',
+                '${S.of(context).url}: ${qrCode.url} ',
                 softWrap: false,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -93,7 +94,7 @@ class _HomePageState extends State<HomePage> {
             onPressed: () {
               Navigator.pop(context);
             },
-            child: Text('Close'),
+            child: Text(S.of(context).close),
           ),
         ],
       ),

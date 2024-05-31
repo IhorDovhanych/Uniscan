@@ -22,8 +22,23 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+        "add": MessageLookupByLibrary.simpleMessage("Add"),
+        "add_and_visit": MessageLookupByLibrary.simpleMessage("Add and visit"),
+        "add_qr_code": MessageLookupByLibrary.simpleMessage("Add QR Code"),
+        "close": MessageLookupByLibrary.simpleMessage("Close"),
+        "edit_qr_code": MessageLookupByLibrary.simpleMessage("Edit QR Code"),
+        "example_url":
+            MessageLookupByLibrary.simpleMessage("https://example.com"),
         "log_in_with_google":
             MessageLookupByLibrary.simpleMessage("Log in with Google"),
-        "log_out": MessageLookupByLibrary.simpleMessage("Log out")
+        "log_out": MessageLookupByLibrary.simpleMessage("Log out"),
+        "name": MessageLookupByLibrary.simpleMessage("Name"),
+        "nearest_qr_code":
+            MessageLookupByLibrary.simpleMessage("Nearest QR Code"),
+        "no_scanned_qr_codes_yet":
+            MessageLookupByLibrary.simpleMessage("No scanned QR codes yet"),
+        "qr_code_name": MessageLookupByLibrary.simpleMessage("QR code name"),
+        "update": MessageLookupByLibrary.simpleMessage("Update"),
+        "url": MessageLookupByLibrary.simpleMessage("URL")
       };
 }

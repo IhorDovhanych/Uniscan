@@ -6,6 +6,7 @@ import 'package:qr_flutter/qr_flutter.dart';
 import 'package:uniscan/application/data/services/qr_code_service.dart';
 import 'package:uniscan/application/di/injections.dart';
 import 'package:uniscan/application/presentation/features/main/features/home/widgets/qr_code/cubit/qr_code_cubit.dart';
+import 'package:uniscan/generated/l10n.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class QrCodeItem extends StatelessWidget {
@@ -132,7 +133,7 @@ class QrCodeItem extends StatelessWidget {
                                     child: InkWell(
                                       onTap: () => launchUrl(Uri.parse(url)),
                                       child: Text(
-                                        "URL: $url ",
+                                        '${S.of(context).url}: $url ',
                                         softWrap: false,
                                         overflow: TextOverflow.ellipsis,
                                       ),

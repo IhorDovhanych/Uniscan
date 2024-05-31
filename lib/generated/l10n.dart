@@ -69,6 +69,126 @@ class S {
       args: [],
     );
   }
+
+  /// `Nearest QR Code`
+  String get nearest_qr_code {
+    return Intl.message(
+      'Nearest QR Code',
+      name: 'nearest_qr_code',
+      desc: 'Message about nearest qr code',
+      args: [],
+    );
+  }
+
+  /// `Name`
+  String get name {
+    return Intl.message(
+      'Name',
+      name: 'name',
+      desc: 'item title',
+      args: [],
+    );
+  }
+
+  /// `URL`
+  String get url {
+    return Intl.message(
+      'URL',
+      name: 'url',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Close`
+  String get close {
+    return Intl.message(
+      'Close',
+      name: 'close',
+      desc: 'title for close button',
+      args: [],
+    );
+  }
+
+  /// `Add QR Code`
+  String get add_qr_code {
+    return Intl.message(
+      'Add QR Code',
+      name: 'add_qr_code',
+      desc: 'title for dialog screen',
+      args: [],
+    );
+  }
+
+  /// `Edit QR Code`
+  String get edit_qr_code {
+    return Intl.message(
+      'Edit QR Code',
+      name: 'edit_qr_code',
+      desc: 'title for dialog screen',
+      args: [],
+    );
+  }
+
+  /// `QR code name`
+  String get qr_code_name {
+    return Intl.message(
+      'QR code name',
+      name: 'qr_code_name',
+      desc: 'placeholder text',
+      args: [],
+    );
+  }
+
+  /// `https://example.com`
+  String get example_url {
+    return Intl.message(
+      'https://example.com',
+      name: 'example_url',
+      desc: 'placeholder for url',
+      args: [],
+    );
+  }
+
+  /// `Add`
+  String get add {
+    return Intl.message(
+      'Add',
+      name: 'add',
+      desc: 'Button title',
+      args: [],
+    );
+  }
+
+  /// `Update`
+  String get update {
+    return Intl.message(
+      'Update',
+      name: 'update',
+      desc: 'Button title',
+      args: [],
+    );
+  }
+
+  /// `Add and visit`
+  String get add_and_visit {
+    return Intl.message(
+      'Add and visit',
+      name: 'add_and_visit',
+      desc: 'Button title',
+      args: [],
+    );
+  }
+
+  /// `No scanned QR codes yet`
+  String get no_scanned_qr_codes_yet {
+    return Intl.message(
+      'No scanned QR codes yet',
+      name: 'no_scanned_qr_codes_yet',
+      desc: 'no qr codes message',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {
