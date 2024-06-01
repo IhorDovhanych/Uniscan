@@ -45,12 +45,12 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(final BuildContext context) => Scaffold(
-        body: BlocListener<MainCubit, int>(
+        body: BlocListener<MainCubit, MainState>(
           listenWhen: (final previous, final current) => previous != current,
           listener: (final context, final state) {
-            if (_pageController.page!.round() != state) {
+            if (_pageController.page!.round() != state.page) {
               _pageController.animateToPage(
-                state,
+                state.page,
                 duration: const Duration(milliseconds: 333),
                 curve: Curves.bounceIn,
               );
