@@ -12,6 +12,8 @@ abstract class QrCodeService {
   Future<QrCodeModel>? getQrCodeById(final String docID);
   Future<void> updateQrCode(final QrCodeModel newQrCode);
   Future<void> deleteQrCode(final String docID);
+  Future<List<QrCodeModel>> getNearbyQrCodes(
+      final double latitude, final double longitude);
 }
 
 class QrCodeServiceImpl extends QrCodeService {
@@ -25,7 +27,8 @@ class QrCodeServiceImpl extends QrCodeService {
   @override
   Future<void> addQrCode(final QrCodeModel qrCode) async {
     final Position pos = await _geoPositionService.determinePosition();
-    final GeoPositionModel geoPosition = GeoPositionModel(latitude: pos.latitude, longitude: pos.longitude);
+    final GeoPositionModel geoPosition =
+        GeoPositionModel(latitude: pos.latitude, longitude: pos.longitude);
 
     final updatedQrCode = qrCode.copyWith(
       geoPosition: geoPosition,
@@ -34,14 +37,19 @@ class QrCodeServiceImpl extends QrCodeService {
       createdAt: DateTime.now(),
     );
     final docRef = await qrCodes.add(updatedQrCode.toJson());
-    await qrCodes.doc(docRef.id).set(updatedQrCode.copyWith(id: docRef.id).toJson());
+    await qrCodes
+        .doc(docRef.id)
+        .set(updatedQrCode.copyWith(id: docRef.id).toJson());
     await _userService.addQrCodeToUser(docRef.id);
   }
   //* CREATE
 
   @override
   Stream<List<QrCodeModel>> get getCreatedByMeQrCodesStream async* {
-    yield* qrCodes.where('creatorId', isEqualTo: _userService.currentUserId).snapshots().map((final event) {
+    yield* qrCodes
+        .where('creatorId', isEqualTo: _userService.currentUserId)
+        .snapshots()
+        .map((final event) {
       final docs = event.docs;
       return docs.map((final e) => QrCodeModel.fromJson(e.data())).toList();
     });
@@ -60,11 +68,12 @@ class QrCodeServiceImpl extends QrCodeService {
 //* READ/GET
 
   @override
-  Future<void> updateQrCode(final QrCodeModel qrCode) => qrCodes.doc(qrCode.id).update(qrCode
-      .copyWith(
-        updatedAt: DateTime.now(),
-      )
-      .toJson());
+  Future<void> updateQrCode(final QrCodeModel qrCode) =>
+      qrCodes.doc(qrCode.id).update(qrCode
+          .copyWith(
+            updatedAt: DateTime.now(),
+          )
+          .toJson());
 //* UPDATE
 
   @override
@@ -72,5 +81,30 @@ class QrCodeServiceImpl extends QrCodeService {
     _userService.deleteQrCodeFromUser(docID);
     return qrCodes.doc(docID).delete();
   }
+
 //* DELETE
+
+  @override
+  Future<List<QrCodeModel>> getNearbyQrCodes(
+    final double latitude,
+    final double longitude,
+  ) async {
+    final List<QrCodeModel> qrCodesCreatedByMe =
+        await getCreatedByMeQrCodesStream.first;
+
+    final List<QrCodeModel> nearbyQrCodes = qrCodesCreatedByMe.where((final qrCode) {
+      if (qrCode.geoPosition != null) {
+        final double distance = Geolocator.distanceBetween(
+          latitude,
+          longitude,
+          qrCode.geoPosition!.latitude,
+          qrCode.geoPosition!.longitude,
+        );
+        return distance <= qrCode.geoPosition!.meters;
+      }
+      return false;
+    }).toList();
+
+    return nearbyQrCodes;
+  }
 }

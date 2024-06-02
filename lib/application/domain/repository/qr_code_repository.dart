@@ -8,4 +8,6 @@ abstract class QrCodeRepository {
   Future<Either<BaseException, void>> addQrCode(final QrCodeEntity qrCode);
   Future<Either<BaseException, void>> updateQrCode(final QrCodeEntity qrCode);
   Future<Either<BaseException, void>> deleteQrCode(final String qrCodeId);
+  Future<Either<BaseException,List<QrCodeEntity>>> getNearbyQrCodes(
+      final double latitude, final double longitude);
 }
