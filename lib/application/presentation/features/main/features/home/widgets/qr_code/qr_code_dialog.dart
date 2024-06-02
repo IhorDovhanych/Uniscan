@@ -4,6 +4,7 @@ import 'package:uniscan/application/di/injections.dart';
 import 'package:uniscan/application/domain/entities/qr_code_entity.dart';
 import 'package:uniscan/application/presentation/features/main/features/home/widgets/qr_code/cubit/qr_code_cubit.dart';
 import 'package:uniscan/application/presentation/widgets/loading/loading_view_widget.dart';
+import 'package:uniscan/generated/l10n.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class QrCodeDialog extends StatelessWidget {
@@ -67,19 +68,19 @@ class QrCodeDialog extends StatelessWidget {
                 child: Column(
                   children: [
                     Text(
-                      _isAdding ? 'Add QR Code' : 'Edit QR Code',
+                      _isAdding ? S.of(context).add_qr_code : S.of(context).edit_qr_code,
                       style: const TextStyle(fontSize: 20),
                     ),
                     CustomInputField(
                       valueText: state.qrCode.name,
-                      labelText: 'Name',
-                      hintText: 'QR code name',
+                      labelText: S.of(context).name,
+                      hintText: S.of(context).qr_code_name,
                       onTextChanged: context.read<QrCodeCubit>().onChangeName,
                     ),
                     CustomInputField(
                       valueText: state.qrCode.url,
-                      labelText: 'URL',
-                      hintText: 'https://example.com',
+                      labelText: S.of(context).url,
+                      hintText: S.of(context).example_url,
                       onTextChanged: context.read<QrCodeCubit>().onChangeUrl,
                     ),
                   ],
@@ -97,11 +98,11 @@ class QrCodeDialog extends StatelessWidget {
                         },
                         child: _isAdding
                             ? Text(
-                                'Add',
+                                S.of(context).add,
                                 style: TextStyle(color: Colors.black),
                               )
-                            : const Text(
-                                'Update',
+                            : Text(
+                                S.of(context).update,
                                 style: TextStyle(color: Colors.black), // Customize color for update
                               ),
                       )
@@ -113,7 +114,7 @@ class QrCodeDialog extends StatelessWidget {
                                 context.read<QrCodeCubit>().addQrCode();
                               },
                               child: Text(
-                                'Add',
+                                S.of(context).add,
                                 style: TextStyle(color: Colors.black),
                               )),
                           ElevatedButton(
@@ -121,8 +122,8 @@ class QrCodeDialog extends StatelessWidget {
                               context.read<QrCodeCubit>().addQrCode();
                               launchUrl(Uri.parse(state.qrCode.url));
                             },
-                            child: const Text(
-                              'Add and visit',
+                            child: Text(
+                              S.of(context).add_and_visit,
                               style: TextStyle(color: Colors.black),
                             ),
                           )

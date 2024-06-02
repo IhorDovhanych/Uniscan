@@ -7,5 +7,50 @@
     "log_out": "Log out",
     "@log_out": {
         "description": "Title for log out button"
+    },
+    "nearest_qr_code": "Nearest QR Code",
+    "@nearest_qr_code": {
+        "description": "Message about nearest qr code"
+    },
+    "name": "Name",
+    "@name": {
+        "description": "item title"
+    },
+    "url": "URL",
+    "close": "Close",
+    "@close": {
+        "description": "title for close button"
+    },
+    "add_qr_code": "Add QR Code",
+    "@add_qr_code": {
+        "description": "title for dialog screen"
+    },
+    "edit_qr_code": "Edit QR Code",
+    "@edit_qr_code": {
+        "description": "title for dialog screen"
+    },
+    "qr_code_name": "QR code name",
+    "@qr_code_name": {
+        "description": "placeholder text"
+    },
+    "example_url": "https://example.com",
+    "@example_url": {
+        "description": "placeholder for url"
+    },
+    "add": "Add",
+    "@add": {
+        "description": "Button title"
+    },
+    "update": "Update",
+    "@update": {
+        "description": "Button title"
+    },
+    "add_and_visit": "Add and visit",
+    "@add_and_visit": {
+        "description": "Button title"
+    },
+    "no_scanned_qr_codes_yet": "No scanned QR codes yet",
+    "@no_scanned_qr_codes_yet": {
+        "description": "no qr codes message"
     }
 }

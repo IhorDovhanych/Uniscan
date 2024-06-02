@@ -4,7 +4,7 @@ import 'package:uniscan/application/domain/entities/qr_code_entity.dart';
 
 extension QrCodeEntityX on QrCodeEntity {
   QrCodeModel get toModel => QrCodeModel(
-        id: id, // Якщо потрібно, заповніть ідентифікатор
+        id: id,
         name: name,
         url: url,
         geoPosition: geoPosition?.toModel,

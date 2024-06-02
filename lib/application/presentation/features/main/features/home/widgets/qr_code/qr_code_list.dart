@@ -5,6 +5,7 @@ import 'package:uniscan/application/presentation/features/main/features/home/cub
 import 'package:uniscan/application/presentation/features/main/features/home/widgets/qr_code/qr_code_dialog.dart';
 import 'package:uniscan/application/presentation/features/main/features/home/widgets/qr_code/qr_code_item.dart';
 import 'package:uniscan/application/presentation/widgets/buttons/logout/widget/logout.dart';
+import 'package:uniscan/generated/l10n.dart';
 
 class QrCodeList extends StatelessWidget {
   const QrCodeList({
@@ -37,7 +38,7 @@ class QrCodeList extends StatelessWidget {
                       Container(
                         width: 200,
                         child: Text(
-                          'No scanned QR codes yet',
+                          S.of(context).no_scanned_qr_codes_yet,
                           style: TextStyle(
                             fontSize: 20,
                             color: Colors.black26,
