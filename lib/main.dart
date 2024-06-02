@@ -1,31 +1,46 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:Uniscan/firebase_options.dart';
-import 'package:Uniscan/pages/camera_page.dart';
-import 'package:Uniscan/pages/home_page.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:uniscan/application/di/injections.dart';
+import 'package:uniscan/application/presentation/cubit/auth_cubit.dart';
+import 'package:uniscan/application/presentation/router/router.gr.dart';
+import 'package:uniscan/firebase_options.dart';
+import 'package:uniscan/generated/l10n.dart';
 
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  runApp(MyApp());
+  await _provideBlocAndRunApp();
+}
+
+Future<void> _provideBlocAndRunApp() async {
+  await pushScopeAsync(appScope);
+  runApp(
+    BlocProvider<AuthCubit>(
+      create: (final _) => getIt<AuthCubit>(),
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
   MyApp({super.key});
 
-  final PageController _pageController = PageController();
+  final _appRouter = AppRouter();
+
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
+  Widget build(final BuildContext context) => MaterialApp.router(
+        localizationsDelegates: const [
+          S.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: S.delegate.supportedLocales,
         debugShowCheckedModeBanner: false,
         theme: ThemeData(fontFamily: 'NAMU'),
-        home: PageView(
-          physics: const BouncingScrollPhysics(),
-          controller: _pageController,
-          children: List.unmodifiable([
-            const HomePage(barcode: '',),
-            CameraPage(pageController: _pageController)
-          ]),
-        ));
-  }
+        routerDelegate: _appRouter.delegate(),
+        routeInformationParser: _appRouter.defaultRouteParser(),
+        builder: (final context, final child) => child!);
 }

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "28247846988",
+    "project_id": "uniscan-b04fe",
+    "storage_bucket": "uniscan-b04fe.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:28247846988:android:c3c96a014518a1322f44e9",
+        "android_client_info": {
+          "package_name": "com.example.uniscan"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCElx1FVecS6rmEK0Ap5rWTJljgasyizP0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
