@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:uniscan/application/data/repository/auth_repository_impl.dart';
+import 'package:uniscan/application/data/repository/geo_position_repository_impl.dart';
 import 'package:uniscan/application/data/repository/qr_code_repository.impl.dart';
 import 'package:uniscan/application/data/services/auth_service.dart';
 import 'package:uniscan/application/data/services/camera_service.dart';
@@ -10,6 +11,7 @@ import 'package:uniscan/application/data/services/geo_position_service.dart';
 import 'package:uniscan/application/data/services/qr_code_service.dart';
 import 'package:uniscan/application/data/services/user_service.dart';
 import 'package:uniscan/application/domain/repository/auth_repository.dart';
+import 'package:uniscan/application/domain/repository/geo_position_repository.dart';
 import 'package:uniscan/application/domain/repository/qr_code_repository.dart';
 import 'package:uniscan/application/domain/usecase/get_qr_codes_stream_use_case.dart';
 import 'package:uniscan/application/domain/usecase/get_user_stream_use_case.dart';
@@ -65,6 +67,7 @@ void _initAppScope(final GetIt getIt) {
         getIt<UserService>(),
       ));
   getIt.registerLazySingleton<QrCodeRepository>(() => QrCodeRepositoryImpl(getIt<QrCodeService>()));
+  getIt.registerLazySingleton<GeoPositionRepository>(() => GeoPositionRepositoryImpl(getIt<GeoPositionService>()));
   //endregion
 
   //region Use cases
@@ -84,6 +87,7 @@ void _initAppScope(final GetIt getIt) {
   getIt.registerFactory<HomeCubit>(() => HomeCubit(
         getIt<GetQrCodesStreamUseCase>(),
         getIt<QrCodeRepository>(),
+        getIt<GeoPositionRepository>(),
       ));
   getIt.registerFactory<QrCodeCubit>(() => QrCodeCubit(getIt<QrCodeRepository>()));
   //endregion
